@@ -11,6 +11,9 @@ namespace PFMBackendAPI.Services
 
         public bool TransactionExists(Transaction transaction);
 
+        public Task<PagedSortedList<Transaction>> GetTransactions(string transactionKind, DateTime? startDate, DateTime? endDate, int page = 1,
+           int pageSize = 10, string sortBy = null, SortOrder sortOrder = SortOrder.Asc);
+
     }
 }
 
