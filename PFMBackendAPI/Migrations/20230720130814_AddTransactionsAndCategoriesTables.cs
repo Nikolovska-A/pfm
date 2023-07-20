@@ -6,10 +6,23 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace PFMBackendAPI.Migrations
 {
-    public partial class InitDb : Migration
+    public partial class AddTransactionsAndCategoriesTables : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "categories",
+                columns: table => new
+                {
+                    Code = table.Column<string>(type: "text", nullable: false),
+                    ParentCode = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_categories", x => x.Code);
+                });
+
             migrationBuilder.CreateTable(
                 name: "transactions",
                 columns: table => new
@@ -23,18 +36,32 @@ namespace PFMBackendAPI.Migrations
                     Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
                     Currency = table.Column<string>(type: "text", nullable: false),
                     Mcc = table.Column<int>(type: "integer", nullable: false),
-                    Kind = table.Column<string>(type: "text", nullable: false)
+                    Kind = table.Column<string>(type: "text", nullable: false),
+                    CatCode = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_transactions", x => x.TransactionId);
+                    table.ForeignKey(
+                        name: "FK_transactions_categories_CatCode",
+                        column: x => x.CatCode,
+                        principalTable: "categories",
+                        principalColumn: "Code");
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_transactions_CatCode",
+                table: "transactions",
+                column: "CatCode");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
                 name: "transactions");
+
+            migrationBuilder.DropTable(
+                name: "categories");
         }
     }
 }

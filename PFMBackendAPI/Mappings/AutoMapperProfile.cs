@@ -19,6 +19,11 @@ namespace PFMBackendAPI.Mappings
 
             CreateMap<PagedSortedList<TransactionEntity>, PagedSortedList<Transaction>>();
 
+            CreateMap<CategoryEntity, Category>()
+              .ForMember(c => c.CodeId, e => e.MapFrom(x => x.Code));
+
+            CreateMap<Category, CategoryEntity>()
+                .ForMember(e => e.Code, c => c.MapFrom(x => x.CodeId));
 
         }
     }

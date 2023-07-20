@@ -3,7 +3,7 @@ using PFMBackendAPI.Models;
 
 namespace PFMBackendAPI.Helpers
 {
-	public class CsvLine
+	public class TransactionCsvLine
 	{
 
         public string id { get; set; }
@@ -17,7 +17,7 @@ namespace PFMBackendAPI.Helpers
         public string kind { get; set; }
 
 
-        public CsvLine()
+        public TransactionCsvLine()
 		{
 		}
 	}

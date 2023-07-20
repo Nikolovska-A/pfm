@@ -10,8 +10,8 @@ using PFMBackendAPI.Database;
 
 namespace PFMBackendAPI.Migrations
 {
-    [DbContext(typeof(TransactionDbContext))]
-    partial class TransactionDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(FinanceDbContext))]
+    partial class FinanceDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -21,6 +21,24 @@ namespace PFMBackendAPI.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("PFMBackendAPI.Database.Entities.CategoryEntity", b =>
+                {
+                    b.Property<string>("Code")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ParentCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Code");
+
+                    b.ToTable("categories", (string)null);
+                });
 
             modelBuilder.Entity("PFMBackendAPI.Database.Entities.TransactionEntity", b =>
                 {
@@ -35,6 +53,9 @@ namespace PFMBackendAPI.Migrations
 
                     b.Property<string>("BeneficiaryName")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("CatCode")
                         .HasColumnType("text");
 
                     b.Property<string>("Currency")
@@ -61,7 +82,23 @@ namespace PFMBackendAPI.Migrations
 
                     b.HasKey("TransactionId");
 
+                    b.HasIndex("CatCode");
+
                     b.ToTable("transactions", (string)null);
+                });
+
+            modelBuilder.Entity("PFMBackendAPI.Database.Entities.TransactionEntity", b =>
+                {
+                    b.HasOne("PFMBackendAPI.Database.Entities.CategoryEntity", "Category")
+                        .WithMany("Transactions")
+                        .HasForeignKey("CatCode");
+
+                    b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("PFMBackendAPI.Database.Entities.CategoryEntity", b =>
+                {
+                    b.Navigation("Transactions");
                 });
 #pragma warning restore 612, 618
         }

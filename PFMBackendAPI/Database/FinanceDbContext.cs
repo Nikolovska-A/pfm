@@ -2,19 +2,21 @@
 using Microsoft.EntityFrameworkCore;
 using PFMBackendAPI.Database.Configurations;
 using PFMBackendAPI.Database.Entities;
+using PFMBackendAPI.Models;
 
 namespace PFMBackendAPI.Database
 {
-	public class TransactionDbContext : DbContext
+	public class FinanceDbContext : DbContext
 	{
 		public DbSet<TransactionEntity> Transactions { get; set; }
+        public DbSet<CategoryEntity> Categories { get; set; }
 
 
-        public TransactionDbContext(DbContextOptions options) : base(options)
+        public FinanceDbContext(DbContextOptions<FinanceDbContext> options) : base(options)
         {
         }
 
-        public TransactionDbContext()
+        public FinanceDbContext()
         {
         }
 
@@ -24,8 +26,14 @@ namespace PFMBackendAPI.Database
             modelBuilder.ApplyConfiguration(
                 new TransactionEntityConfiguration()
                 );
+            modelBuilder.ApplyConfiguration(
+               new CategoryEntityConfiguration()
+               );
+            modelBuilder.Entity<TransactionEntity>().HasOne(t => t.Category).WithMany(c => c.Transactions).HasForeignKey(t => t.CatCode).IsRequired(false);
+
+
             base.OnModelCreating(modelBuilder);
+
         }
     }
 }
-
