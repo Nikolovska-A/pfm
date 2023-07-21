@@ -44,7 +44,8 @@ public class TransactionController : ControllerBase
 
         List<Transaction> transactions = new List<Transaction>();
         List<TransactionCsvLine> csvTransactions = new List<TransactionCsvLine>();
-        List<ErrorResponse> errors = new List<ErrorResponse>();
+        List<ErrorResponse> errors1 = new List<ErrorResponse>();
+        Error errors = new Error();
 
         try
         {
@@ -64,17 +65,17 @@ public class TransactionController : ControllerBase
 
                         if (tempTransaction.Amount == 0)
                         {
-                            errors.Add(new ErrorResponse("amount", "required", "Mandatory field or parameter was not supplied."));
+                            errors1.Add(new ErrorResponse("amount", "required", "Mandatory field or parameter was not supplied."));
                         }
 
                         if (tempTransaction.Direction.Equals('\0'))
                         {
-                            errors.Add(new ErrorResponse("direction", "required", "Mandatory field or parameter was not supplied."));
+                            errors1.Add(new ErrorResponse("direction", "required", "Mandatory field or parameter was not supplied."));
                         }
 
-                        if (!(tempTransaction.Direction.Equals('c') || tempTransaction.Direction.Equals('d')))
+                        if (!tempTransaction.Direction.Equals('c') || !tempTransaction.Direction.Equals('d'))
                         {
-                            errors.Add(new ErrorResponse("direction", "invalid-format", "Value supplied does not have expected format."));
+                            errors1.Add(new ErrorResponse("direction", "invalid-format", "Value supplied does not have expected format."));
                         }
 
                         transactions.Add(tempTransaction);
@@ -83,13 +84,15 @@ public class TransactionController : ControllerBase
                 }
             }
 
-            if (errors.Count == 0)
+            if (errors1.Count == 0)
             {
                 var result = await _transactionService.ImportTransactions(transactions);
                 return Ok(new MessageResponse("Transactions imported successfully!"));
             }
             else
             {
+                errors.StatusCode = BadRequest().StatusCode.ToString();  
+                errors.errors = errors1;
                 return BadRequest(errors);
             }
 
