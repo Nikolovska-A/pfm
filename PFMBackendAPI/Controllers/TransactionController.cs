@@ -44,7 +44,7 @@ public class TransactionController : ControllerBase
 
         List<Transaction> transactions = new List<Transaction>();
         List<TransactionCsvLine> csvTransactions = new List<TransactionCsvLine>();
-        List<ErrorResponse> errors1 = new List<ErrorResponse>();
+        List<ErrorResponse> errorList = new List<ErrorResponse>();
         Error errors = new Error();
 
         try
@@ -65,17 +65,17 @@ public class TransactionController : ControllerBase
 
                         if (tempTransaction.Amount == 0)
                         {
-                            errors1.Add(new ErrorResponse("amount", "required", "Mandatory field or parameter was not supplied."));
+                            errorList.Add(new ErrorResponse("amount", "required", "Mandatory field or parameter was not supplied."));
                         }
 
                         if (tempTransaction.Direction.Equals('\0'))
                         {
-                            errors1.Add(new ErrorResponse("direction", "required", "Mandatory field or parameter was not supplied."));
+                            errorList.Add(new ErrorResponse("direction", "required", "Mandatory field or parameter was not supplied."));
                         }
 
                         if (!tempTransaction.Direction.Equals('c') || !tempTransaction.Direction.Equals('d'))
                         {
-                            errors1.Add(new ErrorResponse("direction", "invalid-format", "Value supplied does not have expected format."));
+                            errorList.Add(new ErrorResponse("direction", "invalid-format", "Value supplied does not have expected format."));
                         }
 
                         transactions.Add(tempTransaction);
@@ -84,7 +84,7 @@ public class TransactionController : ControllerBase
                 }
             }
 
-            if (errors1.Count == 0)
+            if (errorList.Count == 0)
             {
                 var result = await _transactionService.ImportTransactions(transactions);
                 return Ok(new MessageResponse("Transactions imported successfully!"));
@@ -92,7 +92,7 @@ public class TransactionController : ControllerBase
             else
             {
                 errors.StatusCode = BadRequest().StatusCode.ToString();  
-                errors.errors = errors1;
+                errors.errors = errorList;
                 return BadRequest(errors);
             }
 
