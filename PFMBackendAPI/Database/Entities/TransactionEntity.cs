@@ -1,11 +1,11 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using PFMBackendAPI.Models;
 
 namespace PFMBackendAPI.Database.Entities
 {
 	public class TransactionEntity
 	{
-
         public int TransactionId { get; set; }
         public string BeneficiaryName { get; set; }
         public DateTime Date { get; set; }
@@ -15,6 +15,8 @@ namespace PFMBackendAPI.Database.Entities
         public Currency Currency { get; set; }
         public int Mcc { get; set; }
         public string Kind { get; set; }
+        public string CatCode { get; set; }
+        public CategoryEntity Category { get; set; }
 
 
         public TransactionEntity()

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using PFMBackendAPI.Helpers;
 
 namespace PFMBackendAPI.Models
@@ -14,40 +15,42 @@ namespace PFMBackendAPI.Models
         public Currency Currency { get; set; }
         public int Mcc { get; set; }
         public string Kind { get; set; }
+        public string CatCode { get; set; }
+        public Category Category { get; set; }
 
         public Transaction()
 		{
 		}
 
-        public Transaction(CsvLine csvLine)
+        public Transaction(TransactionCsvLine transactionCsvLine)
         {
             int id = 0;
-            int.TryParse(csvLine.id, out id);
+            int.TryParse(transactionCsvLine.id, out id);
 
             DateTime date = new DateTime();
-            DateTime.TryParse(csvLine.date, out date);
+            DateTime.TryParse(transactionCsvLine.date, out date);
 
             char direction = ' ';
-            char.TryParse(csvLine.direction, out direction);
+            char.TryParse(transactionCsvLine.direction, out direction);
 
             double amount = 0;
-            double.TryParse(csvLine.amount, out amount);
+            double.TryParse(transactionCsvLine.amount, out amount);
 
             Currency currency;
-            Enum.TryParse<Currency>(csvLine.currency, out currency);
+            Enum.TryParse<Currency>(transactionCsvLine.currency, out currency);
 
             int mcc = 0;
-            int.TryParse(csvLine.mcc, out mcc);
+            int.TryParse(transactionCsvLine.mcc, out mcc);
 
             this.TransactionId = id;
-            this.BeneficiaryName = csvLine.beneficiaryname;
+            this.BeneficiaryName = transactionCsvLine.beneficiaryname;
             this.Date = date;
             this.Direction = direction;
             this.Amount = amount;
-            this.Description = csvLine.description;
+            this.Description = transactionCsvLine.description;
             this.Currency = currency;
             this.Mcc = mcc;
-            this.Kind = csvLine.kind;
+            this.Kind = transactionCsvLine.kind;
         }
 	}
 }

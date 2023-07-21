@@ -8,9 +8,9 @@ namespace PFMBackendAPI.Database.Repositories
 {
 	public class TransactionRepository : ITransactionRepository
     {
-        TransactionDbContext _dbContext;
+        FinanceDbContext _dbContext;
 
-		public TransactionRepository(TransactionDbContext dbContext)
+		public TransactionRepository(FinanceDbContext dbContext)
 		{
             _dbContext = dbContext;
 		}
@@ -30,16 +30,6 @@ namespace PFMBackendAPI.Database.Repositories
             return _dbContext.Transactions.Any(t => t.TransactionId != transaction.TransactionId);
             
         }
-
-        public string BeneficiaryName { get; set; }
-        public DateTime Date { get; set; }
-        public char Direction { get; set; }
-        public double Amount { get; set; }
-        public string Description { get; set; }
-        public Currency Currency { get; set; }
-        public int Mcc { get; set; }
-        public string Kind { get; set; }
-
 
         public async Task<PagedSortedList<TransactionEntity>> GetTransactions(string transactionKind, DateTime? startDate, DateTime? endDate, int page = 1, int pageSize = 10, string sortBy = null, SortOrder sortOrder = SortOrder.Asc)
         {
@@ -119,7 +109,6 @@ namespace PFMBackendAPI.Database.Repositories
                 SortOrder = sortOrder
             };
         }
-
 
 
     }

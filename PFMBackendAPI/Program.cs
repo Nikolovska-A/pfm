@@ -10,6 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 //AutoMapper definition
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
@@ -19,7 +21,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 //DBContext registration
-builder.Services.AddDbContext<TransactionDbContext>(opt =>
+builder.Services.AddDbContext<FinanceDbContext>(opt =>
 {
     opt.UseNpgsql(CreateConnectionString(builder.Configuration));
 });
@@ -32,7 +34,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
     using var scope = app.Services.GetService<IServiceScopeFactory>().CreateScope();
-    scope.ServiceProvider.GetRequiredService<TransactionDbContext>().Database.Migrate();
+    scope.ServiceProvider.GetRequiredService<FinanceDbContext>().Database.Migrate();
 }
 
 app.UseAuthorization();

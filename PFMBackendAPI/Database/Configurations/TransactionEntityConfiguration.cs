@@ -26,7 +26,7 @@ namespace PFMBackendAPI.Database.Configurations
             builder.Property(x => x.Currency).HasConversion<string>().IsRequired();
             builder.Property(x => x.Mcc);
             builder.Property(x => x.Kind).IsRequired();
-
+            builder.Property(x => x.CatCode);
         }
     }
 }
