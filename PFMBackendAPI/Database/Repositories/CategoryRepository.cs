@@ -30,9 +30,20 @@ namespace PFMBackendAPI.Database.Repositories
 
         }
 
+        public bool CategoryExistById(string categoryCode)
+        {
+            return _dbContext.Categories.Any(t => t.Code == categoryCode);
+
+        }
+
         public bool CategoryExistByParentCodeAndName(CategoryEntity category)
         {
             return _dbContext.Categories.Any(c => c.ParentCode.Equals(category.ParentCode) && c.Name.Equals(category.Name));
+        }
+
+        public CategoryEntity GetCategoryByCode(string categoryCode)
+        {
+            return _dbContext.Categories.Find(categoryCode);
         }
     }
 }

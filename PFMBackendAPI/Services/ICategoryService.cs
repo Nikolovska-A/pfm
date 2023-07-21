@@ -9,9 +9,13 @@ namespace PFMBackendAPI.Services
 
         Task<bool> ImportCategories(List<Category> categories, List<Category> updateCategories);
 
-        public bool CategoryExists(Category category);
+        bool CategoryExists(Category category);
 
-        public bool CategoryExistByParentCodeAndName(Category category);
+        bool CategoryExistById(string categoryCode);
+
+        bool CategoryExistByParentCodeAndName(Category category);
+
+        Category GetCategoryByCode(string categoryCode);
     }
 }
 

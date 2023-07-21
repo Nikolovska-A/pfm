@@ -1,6 +1,7 @@
 ﻿using System;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PFMBackendAPI.Database.Entities;
 using PFMBackendAPI.Database.Repositories;
@@ -32,6 +33,23 @@ namespace PFMBackendAPI.Services
         {
             var entity = _mapper.Map<TransactionEntity>(transaction);
             return _transactionRepository.TransactionExists(entity);
+        }
+
+        public bool TransactionExistById(int transactionId)
+        {
+            return _transactionRepository.TransactionExistById(transactionId);
+        }
+
+        public Transaction GetTransactionById(int transactionId)
+        {
+            var entity = _mapper.Map<Transaction>(_transactionRepository.GetTransactionById(transactionId));
+            return entity;
+        }
+
+        public async Task<bool> UpdateTransaction(int transactionId, string catcode)
+        {
+            var entity = _mapper.Map<TransactionEntity>(_transactionRepository.GetTransactionById(transactionId));
+            return await _transactionRepository.UpdateTransaction(entity.TransactionId, catcode);
         }
 
 

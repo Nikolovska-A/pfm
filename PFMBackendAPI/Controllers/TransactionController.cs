@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SortOrder = PFMBackendAPI.Models.SortOrder;
+using PFMBackendAPI.Models.Requests;
 
 namespace PFMBackendAPI.Controllers;
 
@@ -20,10 +21,12 @@ public class TransactionController : ControllerBase
     private readonly ILogger<TransactionController> _logger;
     private readonly ITransactionService _transactionService;
     private readonly CsvFileReader _csvFileReader;
+    private readonly ICategoryService _categoryService;
 
-    public TransactionController(ITransactionService transactionService, ILogger<TransactionController> logger)
+    public TransactionController(ITransactionService transactionService, ICategoryService categoryService, ILogger<TransactionController> logger)
     {
         _transactionService = transactionService;
+        _categoryService = categoryService;
         _logger = logger;
         _csvFileReader = new CsvFileReader();
     }
@@ -36,7 +39,7 @@ public class TransactionController : ControllerBase
     {
         if (formFile.FileName == null)
         {
-            return BadRequest("File does not exist!");
+            return BadRequest(new MessageResponse("File does not exist!"));
         }
 
         List<Transaction> transactions = new List<Transaction>();
@@ -61,12 +64,12 @@ public class TransactionController : ControllerBase
 
                         if (tempTransaction.Amount == 0)
                         {
-                            errors.Add(new ErrorResponse("amount", "Required", "Mandatory field or parameter was not supplied."));
+                            errors.Add(new ErrorResponse("amount", "required", "Mandatory field or parameter was not supplied."));
                         }
 
                         if (tempTransaction.Direction.Equals('\0'))
                         {
-                            errors.Add(new ErrorResponse("direction", "Required", "Mandatory field or parameter was not supplied."));
+                            errors.Add(new ErrorResponse("direction", "required", "Mandatory field or parameter was not supplied."));
                         }
 
                         if (!(tempTransaction.Direction.Equals('c') || tempTransaction.Direction.Equals('d')))
@@ -108,6 +111,43 @@ public class TransactionController : ControllerBase
 
         var result = await _transactionService.GetTransactions(transactionKind, startDate, endDate, page.Value, pageSize.Value, sortBy, sortOrder);
         return Ok(result);
+    }
+
+
+    [Produces("application/json")]
+    [Route("{id}/categorize")]
+    [HttpPost]
+    public async Task<IActionResult> CategorizeTransaction([FromRoute] int id, [FromBody] CategoryRequest categoryRequest)
+    {
+        try
+        {
+            Transaction transaction = _transactionService.GetTransactionById(id);
+
+            if(transaction != null)
+            {
+                Category category = _categoryService.GetCategoryByCode(categoryRequest.catcode);
+
+                if (category != null)
+                {
+
+                   await _transactionService.UpdateTransaction(transaction.TransactionId, categoryRequest.catcode);
+
+                    return Ok(new MessageResponse("Transaction updated succeffully!"));
+                }
+                else
+                {
+                    return NotFound(new MessageResponse("Category not found!"));
+                }
+
+            }
+            else
+            {
+                return NotFound(new MessageResponse("Transaction not found!"));
+            }
+        } catch (Exception e)
+        {
+            return BadRequest(new MessageResponse(e.Message));
+        }
     }
 
 
