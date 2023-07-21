@@ -3,17 +3,18 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PFMBackendAPI.Database.Entities;
 using PFMBackendAPI.Models;
+using PFMBackendAPI.Models.Responses;
 
 namespace PFMBackendAPI.Database.Repositories
 {
-	public class TransactionRepository : ITransactionRepository
+    public class TransactionRepository : ITransactionRepository
     {
         FinanceDbContext _dbContext;
 
-		public TransactionRepository(FinanceDbContext dbContext)
-		{
+        public TransactionRepository(FinanceDbContext dbContext)
+        {
             _dbContext = dbContext;
-		}
+        }
 
         public async Task<bool> ImportTransactions(List<TransactionEntity> transactions)
         {
@@ -28,7 +29,7 @@ namespace PFMBackendAPI.Database.Repositories
         public bool TransactionExists(TransactionEntity transaction)
         {
             return _dbContext.Transactions.Any(t => t.TransactionId == transaction.TransactionId);
-            
+
         }
 
         public bool TransactionExistById(int transactionId)
@@ -134,6 +135,49 @@ namespace PFMBackendAPI.Database.Repositories
                 SortBy = sortBy,
                 SortOrder = sortOrder
             };
+        }
+
+
+
+        public async Task<List<GroupAnalyticsDto>> GetSpendingAnalytics(string catCode, DateTime? startDate, DateTime? endDate, char direction)
+        {
+            var query = _dbContext.Transactions.AsQueryable();
+
+
+            if (!String.IsNullOrEmpty(catCode))
+            {
+                var values = catCode.Split(',');
+                query = query.Where(t => t.CatCode == catCode);
+            }
+
+            if (startDate != null)
+            {
+                query = query.Where(t => t.Date >= startDate);
+            }
+
+            if (endDate != null)
+            {
+                query = query.Where(t => t.Date <= endDate);
+            }
+
+            if (direction != '\0')
+            {
+                query = query.Where(t => t.Direction == direction);
+            }
+
+            var tquery = query.GroupBy(f => f.CatCode)
+            .Select(g => new GroupAnalyticsDto
+            {
+                catcode = g.Key,
+                count = g.Count(),
+                amount = g.Sum(s => s.Amount),
+
+            });
+
+            List<GroupAnalyticsDto> groupAnalyticsDtos = new List<GroupAnalyticsDto>();
+            groupAnalyticsDtos = await tquery.ToListAsync();
+
+            return groupAnalyticsDtos;
         }
 
 

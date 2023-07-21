@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PFMBackendAPI.Database.Entities;
 using PFMBackendAPI.Models;
+using PFMBackendAPI.Models.Responses;
 
 namespace PFMBackendAPI.Database.Repositories
 {
@@ -20,6 +21,8 @@ namespace PFMBackendAPI.Database.Repositories
         Task<bool> UpdateTransaction(int transactionId, string catcode);
 
         Task<PagedSortedList<TransactionEntity>> GetTransactions(string transactionKind, DateTime? startDate, DateTime? endDate, int page = 1, int pageSize = 5, string sortBy = null, SortOrder sortOrder = SortOrder.Asc);
+
+        Task<List<GroupAnalyticsDto>> GetSpendingAnalytics(string catCode, DateTime? startDate, DateTime? endDate, char direction);
 
 
     }

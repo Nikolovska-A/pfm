@@ -6,6 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PFMBackendAPI.Database.Entities;
 using PFMBackendAPI.Database.Repositories;
 using PFMBackendAPI.Models;
+using PFMBackendAPI.Models.Responses;
 using SortOrder = PFMBackendAPI.Models.SortOrder;
 using Transaction = PFMBackendAPI.Models.Transaction;
 
@@ -59,6 +60,13 @@ namespace PFMBackendAPI.Services
             var result = await _transactionRepository.GetTransactions(transactionKind, startDate, endDate, page, pageSize, sortBy, sortOrder);
 
             return _mapper.Map<PagedSortedList<Transaction>>(result);
+        }
+
+
+        public async Task<List<GroupAnalyticsDto>> GetSpendingAnalytics(string catCode, DateTime? startDate, DateTime? endDate, char direction)
+        {
+            var result = await _transactionRepository.GetSpendingAnalytics(catCode, startDate, endDate, direction);
+            return result;
         }
     }
 
