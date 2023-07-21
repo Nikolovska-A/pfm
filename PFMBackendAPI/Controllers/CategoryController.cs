@@ -35,7 +35,7 @@ namespace PFMBackendAPI.Controllers
 
             if (formFile.FileName == null)
             {
-                return BadRequest("File does not exist!");
+                return BadRequest(new MessageResponse("File does not exist!"));
             }
 
             List<Category> categories = new List<Category>();

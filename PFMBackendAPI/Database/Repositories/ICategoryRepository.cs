@@ -11,7 +11,11 @@ namespace PFMBackendAPI.Database.Repositories
 
         bool CategoryExists(CategoryEntity category);
 
-        public bool CategoryExistByParentCodeAndName(CategoryEntity category);
+        bool CategoryExistById(string categoryCode);
+
+        bool CategoryExistByParentCodeAndName(CategoryEntity category);
+
+        CategoryEntity GetCategoryByCode(string categoryCode);
     }
 }
 

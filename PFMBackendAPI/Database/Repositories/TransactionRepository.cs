@@ -27,9 +27,35 @@ namespace PFMBackendAPI.Database.Repositories
 
         public bool TransactionExists(TransactionEntity transaction)
         {
-            return _dbContext.Transactions.Any(t => t.TransactionId != transaction.TransactionId);
+            return _dbContext.Transactions.Any(t => t.TransactionId == transaction.TransactionId);
             
         }
+
+        public bool TransactionExistById(int transactionId)
+        {
+            return _dbContext.Transactions.AsNoTracking().Any(t => t.TransactionId == transactionId);
+
+        }
+
+        public TransactionEntity GetTransactionById(int transactionId)
+        {
+            return _dbContext.Transactions.Find(transactionId);
+        }
+
+        public async Task<bool> UpdateTransaction(int transactionId, string catcode)
+        {
+            var transactionToUpdate = _dbContext.Transactions.FirstOrDefault(t => t.TransactionId == transactionId);
+
+            if (transactionToUpdate == null)
+            {
+                throw new Exception("Transaction not found!");
+            }
+
+            transactionToUpdate.CatCode = catcode;
+            await _dbContext.SaveChangesAsync();
+            return true;
+        }
+
 
         public async Task<PagedSortedList<TransactionEntity>> GetTransactions(string transactionKind, DateTime? startDate, DateTime? endDate, int page = 1, int pageSize = 10, string sortBy = null, SortOrder sortOrder = SortOrder.Asc)
         {

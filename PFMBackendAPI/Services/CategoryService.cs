@@ -33,10 +33,21 @@ namespace PFMBackendAPI.Services
             return _categoryRepository.CategoryExists(entity);
         }
 
+        public bool CategoryExistById(string categoryCode)
+        {
+            return _categoryRepository.CategoryExistById(categoryCode);
+        }
+
         public bool CategoryExistByParentCodeAndName(Category category)
         {
             var entity = _mapper.Map<CategoryEntity>(category);
             return _categoryRepository.CategoryExistByParentCodeAndName(entity);
+        }
+
+        public Category GetCategoryByCode(string categoryCode)
+        {
+            var entity = _mapper.Map<Category>(_categoryRepository.GetCategoryByCode(categoryCode));
+            return entity;
         }
     }
 }
