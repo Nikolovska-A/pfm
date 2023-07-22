@@ -49,6 +49,13 @@ namespace PFMBackendAPI.Services
             var entity = _mapper.Map<Category>(_categoryRepository.GetCategoryByCode(categoryCode));
             return entity;
         }
+
+        public async Task<PagedSortedList<Category>> GetCategories(string parentCode, int page = 1, int pageSize = 10, string sortBy = null, SortOrder sortOrder = SortOrder.Asc)
+        {
+            var result = await _categoryRepository.GetCategories(parentCode, page, pageSize, sortBy, sortOrder);
+
+            return _mapper.Map<PagedSortedList<Category>>(result);
+        }
     }
 }
 

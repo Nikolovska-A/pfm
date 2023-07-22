@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore;
 using PFMBackendAPI.Database.Entities;
 using PFMBackendAPI.Models;
 
@@ -44,6 +45,54 @@ namespace PFMBackendAPI.Database.Repositories
         public CategoryEntity GetCategoryByCode(string categoryCode)
         {
             return _dbContext.Categories.Find(categoryCode);
+        }
+
+
+        public async Task<PagedSortedList<CategoryEntity>> GetCategories(string parentCode, int page = 1, int pageSize = 10, string sortBy = null, SortOrder sortOrder = SortOrder.Asc)
+        {
+            var query = _dbContext.Categories.AsQueryable();
+
+
+            if (!string.IsNullOrEmpty(sortBy))
+            {
+                switch (sortBy)
+                {
+                    case "parentCode":
+                        query = sortOrder == SortOrder.Asc ? query.OrderBy(x => x.ParentCode) : query.OrderByDescending(x => x.ParentCode);
+                        break;
+                    default:
+                    case "name":
+                        query = sortOrder == SortOrder.Asc ? query.OrderBy(x => x.Name) : query.OrderByDescending(x => x.Name);
+                        break;
+                }
+            }
+            else
+            {
+                query = query.OrderBy(p => p.Name);
+            }
+
+            if (!String.IsNullOrEmpty(parentCode))
+            {
+                var values = parentCode.Split(',');
+                query = query.Where(t => values.Contains(t.ParentCode));
+            }
+
+            var totalCount = query.Count();
+            var totalPages = (int)Math.Ceiling(totalCount * 1.0 / pageSize);
+            query = query.Skip((page - 1) * pageSize).Take(pageSize);
+
+            var items = await query.ToListAsync();
+
+            return new PagedSortedList<CategoryEntity>
+            {
+                Page = page,
+                PageSize = pageSize,
+                TotalCount = totalCount,
+                TotalPages = totalPages,
+                Items = items,
+                SortBy = sortBy,
+                SortOrder = sortOrder
+            };
         }
     }
 }

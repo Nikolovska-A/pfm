@@ -93,5 +93,17 @@ namespace PFMBackendAPI.Controllers
                 return BadRequest(new MessageResponse(ex.Message));
             }
         }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetCategories([FromQuery] string? parentCode, [FromQuery] int? page, [FromQuery] int? pageSize, [FromQuery] string? sortBy, [FromQuery] SortOrder sortOrder)
+        {
+            page = page ?? 1;
+            pageSize = pageSize ?? 10;
+
+            var result = await _categoryService.GetCategories(parentCode, page.Value, pageSize.Value, sortBy, sortOrder);
+
+            return Ok(result);
+        }
     }
 }
