@@ -12,6 +12,8 @@ builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<ISplitService, SplitService>();
+builder.Services.AddScoped<ISplitRepository, SplitRepository>();
 //AutoMapper definition
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 

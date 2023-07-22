@@ -41,7 +41,7 @@ namespace PFMBackendAPI.Controllers
             List<Category> categories = new List<Category>();
             List<Category> updateCategories = new List<Category>();
             List<CategoryCsvLine> csvCategories = new List<CategoryCsvLine>();
-            List<ErrorResponse> errors = new List<ErrorResponse>();
+            List<ErrorResponseDto> errors = new List<ErrorResponseDto>();
 
             try
             {
@@ -62,7 +62,7 @@ namespace PFMBackendAPI.Controllers
 
                             else
                             {
-                                errors.Add(new ErrorResponse("parentCode, name", "Duplicate entries", string.Format("This combination of parent code: '{0}' and name: '{1}' already exists for another entry. " +
+                                errors.Add(new ErrorResponseDto("parentCode, name", "Duplicate entries", string.Format("This combination of parent code: '{0}' and name: '{1}' already exists for another entry. " +
                                     "Please provide a different parent code and name or update the existing entry accordingly.", tempCategory.ParentCode, tempCategory.Name)));
                             }
 

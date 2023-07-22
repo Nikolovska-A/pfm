@@ -40,6 +40,36 @@ namespace PFMBackendAPI.Migrations
                     b.ToTable("categories", (string)null);
                 });
 
+            modelBuilder.Entity("PFMBackendAPI.Database.Entities.SplitEntity", b =>
+                {
+                    b.Property<int>("SplitId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("SplitId"));
+
+                    b.Property<double>("Amount")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("CatCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<int>("TransactionId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("SplitId");
+
+                    b.HasIndex("TransactionId");
+
+                    b.ToTable("splits", (string)null);
+                });
+
             modelBuilder.Entity("PFMBackendAPI.Database.Entities.TransactionEntity", b =>
                 {
                     b.Property<int>("TransactionId")
@@ -87,6 +117,17 @@ namespace PFMBackendAPI.Migrations
                     b.ToTable("transactions", (string)null);
                 });
 
+            modelBuilder.Entity("PFMBackendAPI.Database.Entities.SplitEntity", b =>
+                {
+                    b.HasOne("PFMBackendAPI.Database.Entities.TransactionEntity", "Transaction")
+                        .WithMany("Splits")
+                        .HasForeignKey("TransactionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Transaction");
+                });
+
             modelBuilder.Entity("PFMBackendAPI.Database.Entities.TransactionEntity", b =>
                 {
                     b.HasOne("PFMBackendAPI.Database.Entities.CategoryEntity", "Category")
@@ -99,6 +140,11 @@ namespace PFMBackendAPI.Migrations
             modelBuilder.Entity("PFMBackendAPI.Database.Entities.CategoryEntity", b =>
                 {
                     b.Navigation("Transactions");
+                });
+
+            modelBuilder.Entity("PFMBackendAPI.Database.Entities.TransactionEntity", b =>
+                {
+                    b.Navigation("Splits");
                 });
 #pragma warning restore 612, 618
         }

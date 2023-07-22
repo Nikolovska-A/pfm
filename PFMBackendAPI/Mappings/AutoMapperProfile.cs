@@ -25,6 +25,12 @@ namespace PFMBackendAPI.Mappings
             CreateMap<Category, CategoryEntity>()
                 .ForMember(e => e.Code, c => c.MapFrom(x => x.CodeId));
 
+            CreateMap<SplitEntity, Split>()
+               .ForMember(s => s.SplitId, e => e.MapFrom(x => x.SplitId));
+
+            CreateMap<Split, SplitEntity>()
+                .ForMember(e => e.SplitId, s => s.MapFrom(x => x.SplitId));
+
         }
     }
 }
