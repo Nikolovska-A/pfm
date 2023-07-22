@@ -31,6 +31,8 @@ namespace PFMBackendAPI.Mappings
             CreateMap<Split, SplitEntity>()
                 .ForMember(e => e.SplitId, s => s.MapFrom(x => x.SplitId));
 
+            CreateMap<PagedSortedList<CategoryEntity>, PagedSortedList<Category>>();
+
         }
     }
 }
