@@ -62,6 +62,7 @@ namespace PFMBackendAPI.Database.Repositories
         {
             var query = _dbContext.Transactions.AsQueryable();
 
+
             if (!string.IsNullOrEmpty(sortBy))
             {
                 switch (sortBy)
@@ -119,11 +120,10 @@ namespace PFMBackendAPI.Database.Repositories
             }
 
             var totalCount = query.Count();
-
             var totalPages = (int)Math.Ceiling(totalCount * 1.0 / pageSize);
-
             query = query.Skip((page - 1) * pageSize).Take(pageSize);
-            var items = await query.ToListAsync();
+          
+            var items = await query.Include(t => t.Splits).ToListAsync();
 
             return new PagedSortedList<TransactionEntity>
             {

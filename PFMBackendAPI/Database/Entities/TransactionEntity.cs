@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
 using PFMBackendAPI.Models;
 
 namespace PFMBackendAPI.Database.Entities
@@ -17,7 +18,7 @@ namespace PFMBackendAPI.Database.Entities
         public string Kind { get; set; }
         public string CatCode { get; set; }
         public CategoryEntity Category { get; set; }
-
+        public List<SplitEntity> Splits { get; set; }
 
         public TransactionEntity()
 		{

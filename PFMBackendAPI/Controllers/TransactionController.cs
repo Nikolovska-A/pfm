@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SortOrder = PFMBackendAPI.Models.SortOrder;
 using PFMBackendAPI.Models.Requests;
+using PFMBackendAPI.Models.Responses.dto;
 
 namespace PFMBackendAPI.Controllers;
 
@@ -22,11 +23,13 @@ public class TransactionController : ControllerBase
     private readonly ITransactionService _transactionService;
     private readonly CsvFileReader _csvFileReader;
     private readonly ICategoryService _categoryService;
+    private readonly ISplitService _splitService;
 
-    public TransactionController(ITransactionService transactionService, ICategoryService categoryService, ILogger<TransactionController> logger)
+    public TransactionController(ITransactionService transactionService, ICategoryService categoryService, ISplitService splitService, ILogger<TransactionController> logger)
     {
         _transactionService = transactionService;
         _categoryService = categoryService;
+        _splitService = splitService;
         _logger = logger;
         _csvFileReader = new CsvFileReader();
     }
@@ -44,8 +47,8 @@ public class TransactionController : ControllerBase
 
         List<Transaction> transactions = new List<Transaction>();
         List<TransactionCsvLine> csvTransactions = new List<TransactionCsvLine>();
-        List<ErrorResponse> errorList = new List<ErrorResponse>();
-        Error errors = new Error();
+        List<ErrorResponseDto> errorList = new List<ErrorResponseDto>();
+        ErrorResponse errors = new ErrorResponse();
 
         try
         {
@@ -65,17 +68,17 @@ public class TransactionController : ControllerBase
 
                         if (tempTransaction.Amount == 0)
                         {
-                            errorList.Add(new ErrorResponse("amount", "required", "Mandatory field or parameter was not supplied."));
+                            errorList.Add(new ErrorResponseDto("amount", "required", "Mandatory field or parameter was not supplied."));
                         }
 
                         if (tempTransaction.Direction.Equals('\0'))
                         {
-                            errorList.Add(new ErrorResponse("direction", "required", "Mandatory field or parameter was not supplied."));
+                            errorList.Add(new ErrorResponseDto("direction", "required", "Mandatory field or parameter was not supplied."));
                         }
 
-                        if (!tempTransaction.Direction.Equals('c') || !tempTransaction.Direction.Equals('d'))
+                        if (!(tempTransaction.Direction.Equals('c') || tempTransaction.Direction.Equals('d')))
                         {
-                            errorList.Add(new ErrorResponse("direction", "invalid-format", "Value supplied does not have expected format."));
+                            errorList.Add(new ErrorResponseDto("direction", "invalid-format", "Value supplied does not have expected format."));
                         }
 
                         transactions.Add(tempTransaction);
@@ -91,7 +94,7 @@ public class TransactionController : ControllerBase
             }
             else
             {
-                errors.StatusCode = BadRequest().StatusCode.ToString();  
+                errors.StatusCode = BadRequest().StatusCode.ToString();
                 errors.errors = errorList;
                 return BadRequest(errors);
             }
@@ -113,6 +116,7 @@ public class TransactionController : ControllerBase
         pageSize = pageSize ?? 10;
 
         var result = await _transactionService.GetTransactions(transactionKind, startDate, endDate, page.Value, pageSize.Value, sortBy, sortOrder);
+
         return Ok(result);
     }
 
@@ -126,14 +130,14 @@ public class TransactionController : ControllerBase
         {
             Transaction transaction = _transactionService.GetTransactionById(id);
 
-            if(transaction != null)
+            if (transaction != null)
             {
                 Category category = _categoryService.GetCategoryByCode(categoryRequest.catcode);
 
                 if (category != null)
                 {
 
-                   await _transactionService.UpdateTransaction(transaction.TransactionId, categoryRequest.catcode);
+                    await _transactionService.UpdateTransaction(transaction.TransactionId, categoryRequest.catcode);
 
                     return Ok(new MessageResponse("Transaction updated succeffully!"));
                 }
@@ -147,7 +151,79 @@ public class TransactionController : ControllerBase
             {
                 return NotFound(new MessageResponse("Transaction not found!"));
             }
-        } catch (Exception e)
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new MessageResponse(e.Message));
+        }
+    }
+
+
+    [Produces("application/json")]
+    [Route("{id}/split")]
+    [HttpPost]
+    public async Task<IActionResult> SplitTransaction([FromRoute] int id, [FromBody] SplitRequest splitRequest)
+    {
+        try
+        {
+            List<Split> splits = new List<Split>();
+            List<ErrorResponseDto> errorsList = new List<ErrorResponseDto>();
+            ErrorResponse errors = new ErrorResponse();
+            Transaction transaction = new Transaction();
+
+            if (_transactionService.TransactionExistById(id))
+            {
+                double sumAmount = 0.0;
+                transaction = _transactionService.GetTransactionById(id);
+
+                if (splitRequest.splits.Count > 1)
+                {
+                    foreach (SplitDto split in splitRequest.splits)
+                    {
+                        sumAmount += split.amount;
+
+                        if (!_categoryService.CategoryExistById(split.catcode))
+                        {
+                            errorsList.Add(new ErrorResponseDto("catcode", "invalid-input", string.Format("The provided category code: '{0}' does not exist!", split.catcode)));
+                        }
+
+                        splits.Add(new Split(split, transaction.TransactionId));
+                    }
+
+                    if (transaction.Amount != sumAmount || sumAmount == 0.0)
+                    {
+                        errorsList.Add(new ErrorResponseDto("amount", "invalid-split", "The sum of the split amounts is not equal to the transaction amount."));
+                    }
+                }
+                else
+                {
+                    errorsList.Add(new ErrorResponseDto("splits", "invalid-format", "The transaction cannot be split into one or less then one splits."));
+                }
+            }
+            else
+            {
+                errorsList.Add(new ErrorResponseDto("transaction", "not-found", string.Format("Transaction with the provided transaction id: '{0}' does not exist!", id)));
+                errors.errors = errorsList;
+                errors.StatusCode = NotFound().StatusCode.ToString();
+                return NotFound(errors);
+            }
+            if (errorsList.Count == 0)
+            {
+                if (_splitService.SplitExistByTransactionId(transaction.TransactionId))
+                {
+                    await _splitService.DeleteSplits(transaction.TransactionId);
+                }
+                await _splitService.CreateSplits(splits);
+            }
+            else
+            {
+                errors.errors = errorsList;
+                errors.StatusCode = BadRequest().StatusCode.ToString();
+                return BadRequest(errors);
+            }
+            return Ok(new MessageResponse("Transaction splits saved successfully!"));
+        }
+        catch (Exception e)
         {
             return BadRequest(new MessageResponse(e.Message));
         }
@@ -155,4 +231,3 @@ public class TransactionController : ControllerBase
 
 
 }
-

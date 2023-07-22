@@ -49,6 +49,33 @@ namespace PFMBackendAPI.Migrations
                         principalColumn: "Code");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "splits",
+                columns: table => new
+                {
+                    SplitId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
+                    CatCode = table.Column<string>(type: "text", nullable: false),
+                    Amount = table.Column<double>(type: "double precision", nullable: false),
+                    TransactionId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_splits", x => x.SplitId);
+                    table.ForeignKey(
+                        name: "FK_splits_transactions_TransactionId",
+                        column: x => x.TransactionId,
+                        principalTable: "transactions",
+                        principalColumn: "TransactionId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_splits_TransactionId",
+                table: "splits",
+                column: "TransactionId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_transactions_CatCode",
                 table: "transactions",
@@ -57,6 +84,9 @@ namespace PFMBackendAPI.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "splits");
+
             migrationBuilder.DropTable(
                 name: "transactions");
 

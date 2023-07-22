@@ -1,10 +1,12 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
 using PFMBackendAPI.Helpers;
 
 namespace PFMBackendAPI.Models
 {
-	public class Transaction
+ 
+    public class Transaction
 	{
         public int TransactionId { get; set; }
 		public string BeneficiaryName { get; set; }
@@ -17,6 +19,8 @@ namespace PFMBackendAPI.Models
         public string Kind { get; set; }
         public string CatCode { get; set; }
         public Category Category { get; set; }
+        public List<Split> Splits { get; set; }
+
 
         public Transaction()
 		{
