@@ -11,6 +11,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SortOrder = PFMBackendAPI.Models.SortOrder;
 using PFMBackendAPI.Models.Requests;
 using PFMBackendAPI.Models.Responses.dto;
+using System.Reflection;
+using System.Numerics;
+using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
 
 namespace PFMBackendAPI.Controllers;
 
@@ -227,6 +231,47 @@ public class TransactionController : ControllerBase
         {
             return BadRequest(new MessageResponse(e.Message));
         }
+    }
+
+
+    [Produces("application/json")]
+    [Route("auto-categorize")]
+    [HttpPost]
+    public async Task<IActionResult> AutoCategorizeTransaction()
+    {
+        try
+        {
+            string resourceName = "PFMBackendAPI.resources.rules.yaml";
+            Assembly assembly = Assembly.GetExecutingAssembly();
+
+            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+            {
+                if (stream == null)
+                {
+                    return NotFound(new MessageResponse("File not found!"));
+                }
+
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    string content = reader.ReadToEnd();
+                    var deserializer = new DeserializerBuilder()
+                        .WithNamingConvention(CamelCaseNamingConvention.Instance)
+                        .Build();
+                    List<Rule> rules = deserializer.Deserialize<List<Rule>>(content);
+
+                    foreach (Rule rule in rules)
+                    {
+                        var result = await _transactionService.AutoCategorizeTransaction(rule.catcode, rule.predicate);
+                    }
+                    return Ok(new MessageResponse("Transactions were auto categorized succeffully!"));
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new MessageResponse(e.Message));
+        }
+
     }
 
 

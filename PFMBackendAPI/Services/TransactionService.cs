@@ -68,6 +68,12 @@ namespace PFMBackendAPI.Services
             var result = await _transactionRepository.GetSpendingAnalytics(catCode, startDate, endDate, direction);
             return result;
         }
+
+        public async Task<bool> AutoCategorizeTransaction(string catcode, string predicate)
+        {
+            var result = await _transactionRepository.AutoCategorizeTransaction(catcode, predicate);
+            return result;
+        }
     }
 
     

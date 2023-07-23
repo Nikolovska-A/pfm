@@ -24,6 +24,7 @@ namespace PFMBackendAPI.Database.Repositories
 
         Task<List<GroupAnalyticsDto>> GetSpendingAnalytics(string catCode, DateTime? startDate, DateTime? endDate, char direction);
 
+        Task<bool> AutoCategorizeTransaction(string catcode, string predicate);
 
     }
 }
