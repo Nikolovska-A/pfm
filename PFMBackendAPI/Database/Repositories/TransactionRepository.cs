@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using PFMBackendAPI.Database.Entities;
 using PFMBackendAPI.Models;
 using PFMBackendAPI.Models.Responses;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace PFMBackendAPI.Database.Repositories
 {
@@ -122,7 +123,7 @@ namespace PFMBackendAPI.Database.Repositories
             var totalCount = query.Count();
             var totalPages = (int)Math.Ceiling(totalCount * 1.0 / pageSize);
             query = query.Skip((page - 1) * pageSize).Take(pageSize);
-          
+
             var items = await query.Include(t => t.Splits).ToListAsync();
 
             return new PagedSortedList<TransactionEntity>
@@ -181,6 +182,22 @@ namespace PFMBackendAPI.Database.Repositories
         }
 
 
+        public async Task<bool> AutoCategorizeTransaction(string catcode, string predicate)
+        {
+            var rows = _dbContext.Database.ExecuteSqlRaw($@"CALL sp_autocategorize('{catcode}','{predicate}');");
+            if (rows > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+
     }
+
+
 }
 
