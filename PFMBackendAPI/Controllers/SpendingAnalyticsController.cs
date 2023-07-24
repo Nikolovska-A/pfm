@@ -26,6 +26,10 @@ namespace PFMBackendAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetSpendingAnalytics([FromQuery] string? catCode, [FromQuery] DateTime? startDate, [FromQuery] DateTime? endDate, [FromQuery] char direction)
         {
+            if (startDate > endDate)
+            {
+                return BadRequest(new MessageResponse("The start date should be on or before the end date. Please adjust your dates accordingly."));
+            }
             var result = await _transactionService.GetSpendingAnalytics(catCode, startDate, endDate, direction);
             SpendingAnalyticsResponse response = new SpendingAnalyticsResponse(result);
             if (response.groups.Count == 0)

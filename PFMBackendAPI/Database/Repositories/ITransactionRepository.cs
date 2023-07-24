@@ -10,7 +10,7 @@ namespace PFMBackendAPI.Database.Repositories
 	public interface ITransactionRepository
 	{
 
-        Task<bool> ImportTransactions(List<TransactionEntity> transactions);
+        Task<bool> ImportTransactions(List<TransactionEntity> transactions, List<TransactionEntity> updateTransactions);
 
         bool TransactionExists(TransactionEntity transaction);
 
@@ -25,6 +25,8 @@ namespace PFMBackendAPI.Database.Repositories
         Task<List<GroupAnalyticsDto>> GetSpendingAnalytics(string catCode, DateTime? startDate, DateTime? endDate, char direction);
 
         Task<bool> AutoCategorizeTransaction(string catcode, string predicate);
+
+        Task<List<TransactionEntity>> GetAllTransactions();
 
     }
 }

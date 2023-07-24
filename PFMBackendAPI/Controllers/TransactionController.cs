@@ -15,6 +15,7 @@ using System.Reflection;
 using System.Numerics;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace PFMBackendAPI.Controllers;
 
@@ -44,18 +45,21 @@ public class TransactionController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> ImportTransactionsAsync([FromForm] IFormFile formFile)
     {
-        if (formFile.FileName == null)
-        {
-            return BadRequest(new MessageResponse("File does not exist!"));
-        }
-
         List<Transaction> transactions = new List<Transaction>();
+        List<Transaction> updateTransactions = new List<Transaction>();
         List<TransactionCsvLine> csvTransactions = new List<TransactionCsvLine>();
         List<ErrorResponseDto> errorList = new List<ErrorResponseDto>();
         ErrorResponse errors = new ErrorResponse();
 
         try
         {
+            List<Transaction> listTransactions = await _transactionService.GetAllTransactions();
+            Dictionary<int,Transaction> transactionsMap = new Dictionary<int,Transaction>();
+
+            foreach (Transaction t in listTransactions)
+            {
+                transactionsMap.Add(t.TransactionId, t);
+            }
 
             if (!await _csvFileReader.GetCsvReader(formFile, 1)) { throw new Exception("Something went wrong!"); }
 
@@ -87,29 +91,37 @@ public class TransactionController : ControllerBase
 
                         transactions.Add(tempTransaction);
                     }
-
+                    else
+                    {
+                        if (!transactionsMap[tempTransaction.TransactionId].Equals(tempTransaction))
+                        {
+                            updateTransactions.Add(tempTransaction);
+                        }
+                    }
                 }
             }
 
             if (errorList.Count == 0)
             {
-                var result = await _transactionService.ImportTransactions(transactions);
-                return Ok(new MessageResponse("Transactions imported successfully!"));
+                var result = await _transactionService.ImportTransactions(transactions, updateTransactions);
+                var transactionsImported = transactions.Count;
+                var transactionsUpdated = updateTransactions.Count;
+
+                return Ok(new MessageResponse(String.Format("Success! Transactions imported: {0}  and transactions updated: {1}.", transactionsImported, transactionsUpdated)));
             }
             else
             {
-                errors.StatusCode = BadRequest().StatusCode.ToString();
+                errors.statusCode = BadRequest().StatusCode.ToString();
                 errors.errors = errorList;
                 return BadRequest(errors);
             }
-
         }
         catch (Exception ex)
         {
-            return BadRequest(new MessageResponse(ex.Message));
+            return BadRequest(ex.Message);
+
         }
     }
-
 
 
     [HttpGet]
@@ -119,8 +131,12 @@ public class TransactionController : ControllerBase
         page = page ?? 1;
         pageSize = pageSize ?? 10;
 
-        var result = await _transactionService.GetTransactions(transactionKind, startDate, endDate, page.Value, pageSize.Value, sortBy, sortOrder);
+        if (startDate > endDate)
+        {
+            return BadRequest(new MessageResponse("The start date should be on or before the end date. Please adjust your dates accordingly."));
+        }
 
+        var result = await _transactionService.GetTransactions(transactionKind, startDate, endDate, page.Value, pageSize.Value, sortBy, sortOrder);
         return Ok(result);
     }
 
@@ -143,7 +159,7 @@ public class TransactionController : ControllerBase
 
                     await _transactionService.UpdateTransaction(transaction.TransactionId, categoryRequest.catcode);
 
-                    return Ok(new MessageResponse("Transaction updated succeffully!"));
+                    return Ok(new MessageResponse("Transaction updated successfully!"));
                 }
                 else
                 {
@@ -208,7 +224,7 @@ public class TransactionController : ControllerBase
             {
                 errorsList.Add(new ErrorResponseDto("transaction", "not-found", string.Format("Transaction with the provided transaction id: '{0}' does not exist!", id)));
                 errors.errors = errorsList;
-                errors.StatusCode = NotFound().StatusCode.ToString();
+                errors.statusCode = NotFound().StatusCode.ToString();
                 return NotFound(errors);
             }
             if (errorsList.Count == 0)
@@ -222,7 +238,7 @@ public class TransactionController : ControllerBase
             else
             {
                 errors.errors = errorsList;
-                errors.StatusCode = BadRequest().StatusCode.ToString();
+                errors.statusCode = BadRequest().StatusCode.ToString();
                 return BadRequest(errors);
             }
             return Ok(new MessageResponse("Transaction splits saved successfully!"));
@@ -263,7 +279,7 @@ public class TransactionController : ControllerBase
                     {
                         var result = await _transactionService.AutoCategorizeTransaction(rule.catcode, rule.predicate);
                     }
-                    return Ok(new MessageResponse("Transactions were auto categorized succeffully!"));
+                    return Ok(new MessageResponse("Transactions were auto categorized successfully!"));
                 }
             }
         }

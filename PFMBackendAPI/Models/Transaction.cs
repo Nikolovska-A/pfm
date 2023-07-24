@@ -1,15 +1,15 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using PFMBackendAPI.Helpers;
 
 namespace PFMBackendAPI.Models
 {
- 
+
     public class Transaction
-	{
+    {
         public int TransactionId { get; set; }
-		public string BeneficiaryName { get; set; }
+        public string BeneficiaryName { get; set; }
         public DateTime Date { get; set; }
         public char Direction { get; set; }
         public double Amount { get; set; }
@@ -18,13 +18,14 @@ namespace PFMBackendAPI.Models
         public int Mcc { get; set; }
         public string Kind { get; set; }
         public string CatCode { get; set; }
+        [JsonIgnore]
         public Category Category { get; set; }
         public List<Split> Splits { get; set; }
 
 
         public Transaction()
-		{
-		}
+        {
+        }
 
         public Transaction(TransactionCsvLine transactionCsvLine)
         {
@@ -56,6 +57,21 @@ namespace PFMBackendAPI.Models
             this.Mcc = mcc;
             this.Kind = transactionCsvLine.kind;
         }
-	}
+
+        public override bool Equals(Object o)
+        {
+            var item = o as Transaction;
+            return item.TransactionId == this.TransactionId &&
+                item.BeneficiaryName == this.BeneficiaryName &&
+                item.Date.Date == this.Date.Date &&
+                item.Direction == this.Direction &&
+                item.Amount == this.Amount &&
+                item.Description == this.Description &&
+                item.Currency == this.Currency &&
+                item.Mcc == this.Mcc &&
+                item.Kind == this.Kind &&
+                item.CatCode == this.CatCode;
+        }
+    }
 }
 

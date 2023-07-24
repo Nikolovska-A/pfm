@@ -18,6 +18,8 @@ namespace PFMBackendAPI.Services
         Category GetCategoryByCode(string categoryCode);
 
         Task<PagedSortedList<Category>> GetCategories(string parentCode, int page = 1, int pageSize = 10, string sortBy = null, SortOrder sortOrder = SortOrder.Asc);
+
+        Task<List<Category>> GetAllCategories();
     }
 }
 

@@ -16,13 +16,14 @@ namespace PFMBackendAPI.Database.Repositories
 
         public async Task<bool> ImportCategories(List<CategoryEntity> categories, List<CategoryEntity> updateCategories)
         {
+            _dbContext.ChangeTracker.Clear();
             _dbContext.Categories.UpdateRange(updateCategories);
             _dbContext.Categories.AddRange(categories);
 
             await _dbContext.SaveChangesAsync();
 
             return true;
-
+                    
         }
 
         public bool CategoryExists(CategoryEntity category)
@@ -81,7 +82,7 @@ namespace PFMBackendAPI.Database.Repositories
             var totalPages = (int)Math.Ceiling(totalCount * 1.0 / pageSize);
             query = query.Skip((page - 1) * pageSize).Take(pageSize);
 
-            var items = await query.ToListAsync();
+            var items = await query.Include(c => c.Transactions).ToListAsync();
 
             return new PagedSortedList<CategoryEntity>
             {
@@ -94,6 +95,12 @@ namespace PFMBackendAPI.Database.Repositories
                 SortOrder = sortOrder
             };
         }
+
+        public async Task<List<CategoryEntity>> GetAllCategories()
+        {
+            return await _dbContext.Categories.ToListAsync();
+        }
+
     }
 }
 

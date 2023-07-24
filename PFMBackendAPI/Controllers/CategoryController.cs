@@ -45,6 +45,14 @@ namespace PFMBackendAPI.Controllers
 
             try
             {
+                List<Category> listCategories = await _categoryService.GetAllCategories();
+                Dictionary<string, Category> categoriesMap = new Dictionary<string, Category>();
+
+                foreach (Category c in listCategories)
+                {
+                    categoriesMap.Add(c.CodeId, c);
+                }
+
                 if (!await _csvFileReader.GetCsvReader(formFile, 2)) { throw new Exception("Something went wrong!"); }
                 csvCategories = _csvFileReader.categoryCsvLines;
 
@@ -65,22 +73,26 @@ namespace PFMBackendAPI.Controllers
                                 errors.Add(new ErrorResponseDto("parentCode, name", "Duplicate entries", string.Format("This combination of parent code: '{0}' and name: '{1}' already exists for another entry. " +
                                     "Please provide a different parent code and name or update the existing entry accordingly.", tempCategory.ParentCode, tempCategory.Name)));
                             }
-
                         }
 
                         else
                         {
-                            updateCategories.Add(tempCategory);
+                            if (!categoriesMap[tempCategory.CodeId].Equals(tempCategory))
+                            {
+                                updateCategories.Add(tempCategory);
+                            }
                         }
                     }
 
                 }
 
-
                 if (errors.Count == 0)
                 {
                     var result = await _categoryService.ImportCategories(categories, updateCategories);
-                    return Ok(new MessageResponse("Categories imported and/or updated successfully!"));
+                    var categoriesImported = categories.Count;
+                    var categoriesUpdated = updateCategories.Count;
+
+                    return Ok(new MessageResponse(String.Format("Success! Categories imported: {0}  and categories updated: {1}.", categoriesImported, categoriesUpdated)));
                 }
                 else
                 {

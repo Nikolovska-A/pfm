@@ -9,7 +9,7 @@ namespace PFMBackendAPI.Services
     public interface ITransactionService
     {
 
-        Task<bool> ImportTransactions(List<Transaction> transactions);
+        Task<bool> ImportTransactions(List<Transaction> transactions, List<Transaction> updateTransactions);
 
         bool TransactionExists(Transaction transaction);
 
@@ -25,6 +25,8 @@ namespace PFMBackendAPI.Services
         Task<List<GroupAnalyticsDto>> GetSpendingAnalytics(string catCode, DateTime? startDate, DateTime? endDate, char direction);
 
         Task<bool> AutoCategorizeTransaction(string catcode, string predicate);
+
+        Task<List<Transaction>> GetAllTransactions();
 
     }
 }

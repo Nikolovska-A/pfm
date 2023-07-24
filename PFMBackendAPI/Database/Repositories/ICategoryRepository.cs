@@ -19,6 +19,7 @@ namespace PFMBackendAPI.Database.Repositories
 
         Task<PagedSortedList<CategoryEntity>> GetCategories(string parentCode, int page = 1, int pageSize = 5, string sortBy = null, SortOrder sortOrder = SortOrder.Asc);
 
+        Task<List<CategoryEntity>> GetAllCategories();
     }
 }
 

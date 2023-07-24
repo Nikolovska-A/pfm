@@ -23,10 +23,11 @@ namespace PFMBackendAPI.Services
             _mapper = mapper;
 		}
 
-        public async Task<bool> ImportTransactions(List<Transaction> transactions)
+        public async Task<bool> ImportTransactions(List<Transaction> transactions, List<Transaction> updateTransactions)
         {
             var entity = _mapper.Map<List<TransactionEntity>>(transactions);
-            var response = await _transactionRepository.ImportTransactions(entity);
+            var updateEntity = _mapper.Map<List<TransactionEntity>>(updateTransactions);
+            var response = await _transactionRepository.ImportTransactions(entity, updateEntity);
             return response;
         }
 
@@ -73,6 +74,12 @@ namespace PFMBackendAPI.Services
         {
             var result = await _transactionRepository.AutoCategorizeTransaction(catcode, predicate);
             return result;
+        }
+
+        public async Task<List<Transaction>> GetAllTransactions()
+        {
+            var result = await _transactionRepository.GetAllTransactions();
+            return _mapper.Map<List<Transaction>>(result);
         }
     }
 

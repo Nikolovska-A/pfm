@@ -12,19 +12,21 @@ namespace PFMBackendAPI.Database.Repositories
     {
         FinanceDbContext _dbContext;
 
+        public const int MaxPageSize = 100;
+
         public TransactionRepository(FinanceDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public async Task<bool> ImportTransactions(List<TransactionEntity> transactions)
+        public async Task<bool> ImportTransactions(List<TransactionEntity> transactions, List<TransactionEntity> updateTransactions)
         {
+            _dbContext.ChangeTracker.Clear();
+            _dbContext.Transactions.UpdateRange(updateTransactions);
             _dbContext.Transactions.AddRange(transactions);
 
             await _dbContext.SaveChangesAsync();
-
             return true;
-
         }
 
         public bool TransactionExists(TransactionEntity transaction)
@@ -61,8 +63,12 @@ namespace PFMBackendAPI.Database.Repositories
 
         public async Task<PagedSortedList<TransactionEntity>> GetTransactions(string transactionKind, DateTime? startDate, DateTime? endDate, int page = 1, int pageSize = 10, string sortBy = null, SortOrder sortOrder = SortOrder.Asc)
         {
-            var query = _dbContext.Transactions.AsQueryable();
 
+            if (pageSize > MaxPageSize)
+            {
+                pageSize = MaxPageSize;
+            }
+            var query = _dbContext.Transactions.AsQueryable();
 
             if (!string.IsNullOrEmpty(sortBy))
             {
@@ -148,7 +154,11 @@ namespace PFMBackendAPI.Database.Repositories
             if (!String.IsNullOrEmpty(catCode))
             {
                 var values = catCode.Split(',');
-                query = query.Where(t => t.CatCode == catCode);
+                query = query.Where(t => values.Contains(t.CatCode));
+            }
+            else
+            {
+                query = query.Where(t => t.CatCode != null);
             }
 
             if (startDate != null)
@@ -194,6 +204,11 @@ namespace PFMBackendAPI.Database.Repositories
                 return false;
             }
 
+        }
+
+        public async Task<List<TransactionEntity>> GetAllTransactions()
+        {
+            return await _dbContext.Transactions.ToListAsync();
         }
 
     }

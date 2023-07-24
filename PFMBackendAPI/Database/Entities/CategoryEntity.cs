@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using PFMBackendAPI.Models;
 
 namespace PFMBackendAPI.Database.Entities
@@ -11,7 +12,7 @@ namespace PFMBackendAPI.Database.Entities
         public string ParentCode { get; set; }
         public string Name { get; set; }
 
-		public List<TransactionEntity> Transactions { get; set; }
+        public List<TransactionEntity> Transactions { get; set; }
 
         public CategoryEntity()
 		{

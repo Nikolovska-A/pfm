@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using PFMBackendAPI.Models;
 
 namespace PFMBackendAPI.Database.Entities

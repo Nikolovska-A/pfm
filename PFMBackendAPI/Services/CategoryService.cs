@@ -56,6 +56,12 @@ namespace PFMBackendAPI.Services
 
             return _mapper.Map<PagedSortedList<Category>>(result);
         }
+
+        public async Task<List<Category>> GetAllCategories()
+        {
+            var result = await _categoryRepository.GetAllCategories();
+            return _mapper.Map<List<Category>>(result);
+        }
     }
 }
 
