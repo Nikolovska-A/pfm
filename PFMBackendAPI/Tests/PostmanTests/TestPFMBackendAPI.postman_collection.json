@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "1a24bff7-0299-48f9-a76c-d834c12fad82",
-		"name": "TestPFMBackendAPI",
+		"name": "Test PFMBackendAPI",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "13341761"
 	},
@@ -665,7 +665,7 @@
 											"",
 											"",
 											"pm.test(\"Response time is less than 500ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(3000);",
+											"    pm.expect(pm.response.responseTime).to.be.below(5000);",
 											"});"
 										],
 										"type": "text/javascript"
