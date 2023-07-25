@@ -1,25 +1,40 @@
-﻿<Properties StartupConfiguration="{2093CC08-B639-4482-B08F-2C64460D683F}|Default">
-  <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
-  </MonoDevelop.Ide.DebuggingService.Breakpoints>
-  <MonoDevelop.Ide.Workbench>
+﻿<Properties StartupConfiguration="{6D14A9D2-042C-45EB-AC4E-ABB0692F88E6}|Default">
+  <MonoDevelop.Ide.ItemProperties.PFMBackendAPI PreferredExecutionTarget="/Applications/Google Chrome.app" />
+  <MonoDevelop.Ide.ItemProperties.docker-compose PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Dockerfile">
+    <Files>
+      <File FileName="Program.cs" Line="52" Column="1" />
+      <File FileName="Controllers/TransactionController.cs" Line="156" Column="1" />
+      <File FileName="Dockerfile" Line="25" Column="1" />
+    </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="PFMBackendAPI">
+            <Node name="docker-compose">
+              <Node name="docker-compose.yml" expanded="True" />
+            </Node>
             <Node name="PFMBackendAPI">
-              <Node name="Controllers" selected="True" />
-              <Node name="Migrations" expanded="True">
-                <Node name="20230718111746_InitDb.cs" expanded="True" />
+              <Node name="Dependencies" expanded="True">
+                <Node name="PackageDependencies" expanded="True" />
               </Node>
+              <Node name="Controllers" expanded="True" />
+              <Node name="data" selected="True" />
             </Node>
           </Node>
         </State>
       </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State>
+          <Value>connBuilder.ConnectionString</Value>
+        </State>
+      </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
-  <MonoDevelop.Ide.ItemProperties.PFMBackendAPI PreferredExecutionTarget="/Applications/Google Chrome.app" />
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MultiItemStartupConfigurations />
-  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>
