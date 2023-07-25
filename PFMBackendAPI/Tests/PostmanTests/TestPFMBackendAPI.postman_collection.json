@@ -7,8 +7,406 @@
 	},
 	"item": [
 		{
+			"name": "Categories",
+			"item": [
+				{
+					"name": "Import File",
+					"item": [
+						{
+							"name": "Import File 200",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"const expectedSchema = {",
+											"    \"type\": \"object\",",
+											"    \"properties\": {",
+											"        \"message\": { \"type\": \"string\" }",
+											"    },",
+											"    \"required\": [\"message\"]",
+											"};",
+											"",
+											"pm.test(\"Response has correct schema\", function () {",
+											"    const jsonData = pm.response.json();",
+											"    pm.expect(tv4.validate(jsonData, expectedSchema)).to.be.true;",
+											"});",
+											"",
+											"",
+											"pm.test(\"Response time is less than 500ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(3000);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "",
+										"value": "",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "formFile",
+											"type": "file",
+											"src": "/Users/aleksandranikolovska/Desktop/PFM-ASEE/pfm/PFMBackendAPI/resources/categories.csv"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{server}}{{categoriesUri}}/import",
+									"host": [
+										"{{server}}{{categoriesUri}}"
+									],
+									"path": [
+										"import"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Import File 400",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"const expectedSchema = {",
+											"    \"type\": \"object\",",
+											"    \"properties\": {",
+											"        \"statusCode\": { \"type\": \"number\" },",
+											"        \"message\": { \"type\": \"string\" },",
+											"        \"errors\": {",
+											"            \"type\": \"object\",",
+											"            \"properties\": {",
+											"                \"formFile\": {",
+											"                    \"type\": \"array\",",
+											"                    \"items\": {",
+											"                        \"type\": \"string\"",
+											"                    }",
+											"                }",
+											"            },",
+											"            \"required\": [\"formFile\"]",
+											"        }",
+											"    },",
+											"    \"required\": [\"statusCode\", \"message\", \"errors\"]",
+											"};",
+											"",
+											"pm.test(\"Response has correct schema\", function () {",
+											"    const jsonData = pm.response.json();",
+											"    pm.expect(tv4.validate(jsonData, expectedSchema)).to.be.true;",
+											"});",
+											"",
+											"",
+											"pm.test(\"Response time is less than 500ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(3000);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "",
+										"value": "",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "formFile",
+											"type": "file",
+											"src": "/Users/aleksandranikolovska/Desktop/PFM-ASEE/pfm/PFMBackendAPI/resources/categories.csv",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{server}}{{categoriesUri}}/import",
+									"host": [
+										"{{server}}{{categoriesUri}}"
+									],
+									"path": [
+										"import"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get Categories",
+					"item": [
+						{
+							"name": "Get Categories 200",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"const expectedSchema = {",
+											"    \"type\": \"object\",",
+											"    \"properties\": {",
+											"        \"totalCount\": { \"type\": \"number\" },",
+											"        \"pageSize\": { \"type\": \"number\" },",
+											"        \"page\": { \"type\": \"number\" },",
+											"        \"totalPages\": { \"type\": \"number\" },",
+											"        \"sortOrder\": { \"type\": \"number\" },",
+											"        \"sortBy\": { \"type\": \"string\" },",
+											"        \"items\": {",
+											"            \"type\": \"array\",",
+											"            \"items\": {",
+											"                \"type\": \"object\",",
+											"                \"properties\": {",
+											"                    \"codeId\": { \"type\": \"string\" },",
+											"                    \"parentCode\": { \"type\": \"string\" },",
+											"                    \"name\": { \"type\": \"string\" }",
+											"                },",
+											"                \"required\": [\"codeId\", \"parentCode\", \"name\"]",
+											"            }",
+											"        }",
+											"    },",
+											"    \"required\": [\"totalCount\", \"pageSize\", \"page\", \"totalPages\", \"sortOrder\", \"sortBy\", \"items\"]",
+											"};",
+											"",
+											"pm.test(\"Response has correct schema\", function () {",
+											"    const jsonData = pm.response.json();",
+											"    pm.expect(tv4.validate(jsonData, expectedSchema)).to.be.true;",
+											"});",
+											"",
+											"pm.test(\"Response time is less than 500ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(500);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{server}}{{categoriesUri}}?parentCode=B&sortBy=parentCode&sortOrder=desc&page=1&pageSize=10",
+									"host": [
+										"{{server}}{{categoriesUri}}"
+									],
+									"query": [
+										{
+											"key": "parentCode",
+											"value": "B"
+										},
+										{
+											"key": "sortBy",
+											"value": "parentCode"
+										},
+										{
+											"key": "sortOrder",
+											"value": "desc"
+										},
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "pageSize",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
 			"name": "Transactions",
 			"item": [
+				{
+					"name": "Import File",
+					"item": [
+						{
+							"name": "Import File 200",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"const expectedSchema = {",
+											"    \"type\": \"object\",",
+											"    \"properties\": {",
+											"        \"message\": { \"type\": \"string\" }",
+											"    },",
+											"    \"required\": [\"message\"]",
+											"};",
+											"",
+											"pm.test(\"Response has correct schema\", function () {",
+											"    const jsonData = pm.response.json();",
+											"    pm.expect(tv4.validate(jsonData, expectedSchema)).to.be.true;",
+											"});",
+											"",
+											"",
+											"pm.test(\"Response time is less than 500ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "",
+										"value": "",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "formFile",
+											"type": "file",
+											"src": "/Users/aleksandranikolovska/Desktop/PFM-ASEE/pfm/PFMBackendAPI/resources/transactions.csv"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{server}}{{transactionsUri}}/import",
+									"host": [
+										"{{server}}{{transactionsUri}}"
+									],
+									"path": [
+										"import"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Import File 400",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"const expectedSchema = {",
+											"    \"type\": \"object\",",
+											"    \"properties\": {",
+											"        \"statusCode\": { \"type\": \"number\" },",
+											"        \"message\": { \"type\": \"string\" },",
+											"        \"errors\": {",
+											"            \"type\": \"object\",",
+											"            \"properties\": {",
+											"                \"formFile\": {",
+											"                    \"type\": \"array\",",
+											"                    \"items\": {",
+											"                        \"type\": \"string\"",
+											"                    }",
+											"                }",
+											"            },",
+											"            \"required\": [\"formFile\"]",
+											"        }",
+											"    },",
+											"    \"required\": [\"statusCode\", \"message\", \"errors\"]",
+											"};",
+											"",
+											"pm.test(\"Response has correct schema\", function () {",
+											"    const jsonData = pm.response.json();",
+											"    pm.expect(tv4.validate(jsonData, expectedSchema)).to.be.true;",
+											"});",
+											"",
+											"",
+											"pm.test(\"Response time is less than 500ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(3000);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "",
+										"value": "",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "formFile",
+											"type": "file",
+											"src": "/Users/aleksandranikolovska/Desktop/PFM-ASEE/pfm/PFMBackendAPI/resources/transactions.csv",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{server}}{{transactionsUri}}/import",
+									"host": [
+										"{{server}}{{transactionsUri}}"
+									],
+									"path": [
+										"import"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
 				{
 					"name": "Categorize Transaction",
 					"item": [
@@ -635,404 +1033,6 @@
 							"response": []
 						}
 					]
-				},
-				{
-					"name": "Import File",
-					"item": [
-						{
-							"name": "Import File 200",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});",
-											"",
-											"const expectedSchema = {",
-											"    \"type\": \"object\",",
-											"    \"properties\": {",
-											"        \"message\": { \"type\": \"string\" }",
-											"    },",
-											"    \"required\": [\"message\"]",
-											"};",
-											"",
-											"pm.test(\"Response has correct schema\", function () {",
-											"    const jsonData = pm.response.json();",
-											"    pm.expect(tv4.validate(jsonData, expectedSchema)).to.be.true;",
-											"});",
-											"",
-											"",
-											"pm.test(\"Response time is less than 500ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(5000);",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "",
-										"value": "",
-										"type": "text",
-										"disabled": true
-									}
-								],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "formFile",
-											"type": "file",
-											"src": "/Users/aleksandranikolovska/Desktop/PFM-ASEE/pfm/PFMBackendAPI/resources/transactions.csv"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{server}}{{transactionsUri}}/import",
-									"host": [
-										"{{server}}{{transactionsUri}}"
-									],
-									"path": [
-										"import"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Import File 400",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 400\", function () {",
-											"    pm.response.to.have.status(400);",
-											"});",
-											"",
-											"const expectedSchema = {",
-											"    \"type\": \"object\",",
-											"    \"properties\": {",
-											"        \"statusCode\": { \"type\": \"number\" },",
-											"        \"message\": { \"type\": \"string\" },",
-											"        \"errors\": {",
-											"            \"type\": \"object\",",
-											"            \"properties\": {",
-											"                \"formFile\": {",
-											"                    \"type\": \"array\",",
-											"                    \"items\": {",
-											"                        \"type\": \"string\"",
-											"                    }",
-											"                }",
-											"            },",
-											"            \"required\": [\"formFile\"]",
-											"        }",
-											"    },",
-											"    \"required\": [\"statusCode\", \"message\", \"errors\"]",
-											"};",
-											"",
-											"pm.test(\"Response has correct schema\", function () {",
-											"    const jsonData = pm.response.json();",
-											"    pm.expect(tv4.validate(jsonData, expectedSchema)).to.be.true;",
-											"});",
-											"",
-											"",
-											"pm.test(\"Response time is less than 500ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(3000);",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "",
-										"value": "",
-										"type": "text",
-										"disabled": true
-									}
-								],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "formFile",
-											"type": "file",
-											"src": "/Users/aleksandranikolovska/Desktop/PFM-ASEE/pfm/PFMBackendAPI/resources/transactions.csv",
-											"disabled": true
-										}
-									]
-								},
-								"url": {
-									"raw": "{{server}}{{transactionsUri}}/import",
-									"host": [
-										"{{server}}{{transactionsUri}}"
-									],
-									"path": [
-										"import"
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				}
-			]
-		},
-		{
-			"name": "Categories",
-			"item": [
-				{
-					"name": "Get Categories",
-					"item": [
-						{
-							"name": "Get Categories 200",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});",
-											"",
-											"const expectedSchema = {",
-											"    \"type\": \"object\",",
-											"    \"properties\": {",
-											"        \"totalCount\": { \"type\": \"number\" },",
-											"        \"pageSize\": { \"type\": \"number\" },",
-											"        \"page\": { \"type\": \"number\" },",
-											"        \"totalPages\": { \"type\": \"number\" },",
-											"        \"sortOrder\": { \"type\": \"number\" },",
-											"        \"sortBy\": { \"type\": \"string\" },",
-											"        \"items\": {",
-											"            \"type\": \"array\",",
-											"            \"items\": {",
-											"                \"type\": \"object\",",
-											"                \"properties\": {",
-											"                    \"codeId\": { \"type\": \"string\" },",
-											"                    \"parentCode\": { \"type\": \"string\" },",
-											"                    \"name\": { \"type\": \"string\" }",
-											"                },",
-											"                \"required\": [\"codeId\", \"parentCode\", \"name\"]",
-											"            }",
-											"        }",
-											"    },",
-											"    \"required\": [\"totalCount\", \"pageSize\", \"page\", \"totalPages\", \"sortOrder\", \"sortBy\", \"items\"]",
-											"};",
-											"",
-											"pm.test(\"Response has correct schema\", function () {",
-											"    const jsonData = pm.response.json();",
-											"    pm.expect(tv4.validate(jsonData, expectedSchema)).to.be.true;",
-											"});",
-											"",
-											"pm.test(\"Response time is less than 500ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(500);",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "GET",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": []
-								},
-								"url": {
-									"raw": "{{server}}{{categoriesUri}}?parentCode=B&sortBy=parentCode&sortOrder=desc&page=1&pageSize=10",
-									"host": [
-										"{{server}}{{categoriesUri}}"
-									],
-									"query": [
-										{
-											"key": "parentCode",
-											"value": "B"
-										},
-										{
-											"key": "sortBy",
-											"value": "parentCode"
-										},
-										{
-											"key": "sortOrder",
-											"value": "desc"
-										},
-										{
-											"key": "page",
-											"value": "1"
-										},
-										{
-											"key": "pageSize",
-											"value": "10"
-										}
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "Import File",
-					"item": [
-						{
-							"name": "Import File 200",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});",
-											"",
-											"const expectedSchema = {",
-											"    \"type\": \"object\",",
-											"    \"properties\": {",
-											"        \"message\": { \"type\": \"string\" }",
-											"    },",
-											"    \"required\": [\"message\"]",
-											"};",
-											"",
-											"pm.test(\"Response has correct schema\", function () {",
-											"    const jsonData = pm.response.json();",
-											"    pm.expect(tv4.validate(jsonData, expectedSchema)).to.be.true;",
-											"});",
-											"",
-											"",
-											"pm.test(\"Response time is less than 500ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(3000);",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "",
-										"value": "",
-										"type": "text",
-										"disabled": true
-									}
-								],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "formFile",
-											"type": "file",
-											"src": "/Users/aleksandranikolovska/Desktop/PFM-ASEE/pfm/PFMBackendAPI/resources/categories.csv"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{server}}{{categoriesUri}}/import",
-									"host": [
-										"{{server}}{{categoriesUri}}"
-									],
-									"path": [
-										"import"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Import File 400",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 400\", function () {",
-											"    pm.response.to.have.status(400);",
-											"});",
-											"",
-											"const expectedSchema = {",
-											"    \"type\": \"object\",",
-											"    \"properties\": {",
-											"        \"statusCode\": { \"type\": \"number\" },",
-											"        \"message\": { \"type\": \"string\" },",
-											"        \"errors\": {",
-											"            \"type\": \"object\",",
-											"            \"properties\": {",
-											"                \"formFile\": {",
-											"                    \"type\": \"array\",",
-											"                    \"items\": {",
-											"                        \"type\": \"string\"",
-											"                    }",
-											"                }",
-											"            },",
-											"            \"required\": [\"formFile\"]",
-											"        }",
-											"    },",
-											"    \"required\": [\"statusCode\", \"message\", \"errors\"]",
-											"};",
-											"",
-											"pm.test(\"Response has correct schema\", function () {",
-											"    const jsonData = pm.response.json();",
-											"    pm.expect(tv4.validate(jsonData, expectedSchema)).to.be.true;",
-											"});",
-											"",
-											"",
-											"pm.test(\"Response time is less than 500ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(3000);",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "",
-										"value": "",
-										"type": "text",
-										"disabled": true
-									}
-								],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "formFile",
-											"type": "file",
-											"src": "/Users/aleksandranikolovska/Desktop/PFM-ASEE/pfm/PFMBackendAPI/resources/categories.csv",
-											"disabled": true
-										}
-									]
-								},
-								"url": {
-									"raw": "{{server}}{{categoriesUri}}/import",
-									"host": [
-										"{{server}}{{categoriesUri}}"
-									],
-									"path": [
-										"import"
-									]
-								}
-							},
-							"response": []
-						}
-					]
 				}
 			]
 		},
@@ -1093,29 +1093,21 @@
 								"header": [],
 								"body": {
 									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "formFile",
-											"type": "file",
-											"src": [],
-											"disabled": true
-										}
-									]
+									"formdata": []
 								},
 								"url": {
-									"raw": "{{server}}{{spendingAnalyticsUri}}?catcode=C,4",
+									"raw": "{{server}}{{spendingAnalyticsUri}}?catcode=J&startDate=2021-11-20",
 									"host": [
 										"{{server}}{{spendingAnalyticsUri}}"
 									],
 									"query": [
 										{
 											"key": "catcode",
-											"value": "C,4"
+											"value": "J"
 										},
 										{
 											"key": "startDate",
-											"value": "2021-11-20",
-											"disabled": true
+											"value": "2021-11-20"
 										},
 										{
 											"key": "endDate",
