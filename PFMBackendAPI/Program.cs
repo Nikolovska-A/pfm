@@ -52,10 +52,10 @@ app.Run();
 
 string CreateConnectionString(IConfiguration configuration)
 {
-    var username = Environment.GetEnvironmentVariable("DATABASE_USERNAME");
-    var pass = Environment.GetEnvironmentVariable("DATABASE_PASSWORD");
+    var username = Environment.GetEnvironmentVariable("DATABASE_USERNAME") ?? "postgres";
+    var pass = Environment.GetEnvironmentVariable("DATABASE_PASSWORD") ?? "admin";
     var databaseName = Environment.GetEnvironmentVariable("DATABASE_NAME") ?? "finance";
-    var host = Environment.GetEnvironmentVariable("DATABASE_HOST") ?? "localhost";
+    var host = Environment.GetEnvironmentVariable("DATABASE_HOST") ?? "docker.for.mac.host.internal";
     var port = Environment.GetEnvironmentVariable("DATABASE_PORT") ?? "5432";
 
     var connBuilder = new NpgsqlConnectionStringBuilder
@@ -70,6 +70,6 @@ string CreateConnectionString(IConfiguration configuration)
     };
 
     return connBuilder.ConnectionString;
-  
+    //return "Host=docker.for.mac.host.internal;Port=5432;Username=postgres;Database=finance;Password=admin;Pooling=True";
 }
 

@@ -5,6 +5,8 @@ VisualStudioVersion = 25.0.1706.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PFMBackendAPI", "PFMBackendAPI.csproj", "{2093CC08-B639-4482-B08F-2C64460D683F}"
 EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{6D14A9D2-042C-45EB-AC4E-ABB0692F88E6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{2093CC08-B639-4482-B08F-2C64460D683F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2093CC08-B639-4482-B08F-2C64460D683F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2093CC08-B639-4482-B08F-2C64460D683F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D14A9D2-042C-45EB-AC4E-ABB0692F88E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D14A9D2-042C-45EB-AC4E-ABB0692F88E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D14A9D2-042C-45EB-AC4E-ABB0692F88E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D14A9D2-042C-45EB-AC4E-ABB0692F88E6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
