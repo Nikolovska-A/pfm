@@ -29,6 +29,7 @@ public class TransactionController : ControllerBase
     private readonly CsvFileReader _csvFileReader;
     private readonly ICategoryService _categoryService;
     private readonly ISplitService _splitService;
+    private readonly GetRules _getRules;
 
     public TransactionController(ITransactionService transactionService, ICategoryService categoryService, ISplitService splitService, ILogger<TransactionController> logger)
     {
@@ -37,6 +38,7 @@ public class TransactionController : ControllerBase
         _splitService = splitService;
         _logger = logger;
         _csvFileReader = new CsvFileReader();
+        _getRules = new GetRules();
     }
 
 
@@ -54,7 +56,7 @@ public class TransactionController : ControllerBase
         try
         {
             List<Transaction> listTransactions = await _transactionService.GetAllTransactions();
-            Dictionary<int,Transaction> transactionsMap = new Dictionary<int,Transaction>();
+            Dictionary<int, Transaction> transactionsMap = new Dictionary<int, Transaction>();
 
             foreach (Transaction t in listTransactions)
             {
@@ -258,30 +260,37 @@ public class TransactionController : ControllerBase
         try
         {
             string resourceName = "PFMBackendAPI.resources.rules.yaml";
-            Assembly assembly = Assembly.GetExecutingAssembly();
+            List<Rule> rules = _getRules.GetRulesList(resourceName);
 
-            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+            foreach (Rule rule in rules)
             {
-                if (stream == null)
-                {
-                    return NotFound(new MessageResponse("File not found!"));
-                }
-
-                using (StreamReader reader = new StreamReader(stream))
-                {
-                    string content = reader.ReadToEnd();
-                    var deserializer = new DeserializerBuilder()
-                        .WithNamingConvention(CamelCaseNamingConvention.Instance)
-                        .Build();
-                    List<Rule> rules = deserializer.Deserialize<List<Rule>>(content);
-
-                    foreach (Rule rule in rules)
-                    {
-                        var result = await _transactionService.AutoCategorizeTransaction(rule.catcode, rule.predicate);
-                    }
-                    return Ok(new MessageResponse("Transactions were auto categorized successfully!"));
-                }
+                var result = await _transactionService.AutoCategorizeTransaction(rule.catcode, rule.predicate);
             }
+            return Ok(new MessageResponse("Transactions were auto categorized successfully!"));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new MessageResponse(e.Message));
+        }
+
+    }
+
+
+    [Produces("application/json")]
+    [Route("auto-categorize-new")]
+    [HttpPost]
+    public async Task<IActionResult> AutoCategorizeTransactionNew()
+    {
+        try
+        {
+            string resourceName = "PFMBackendAPI.resources.rules-new.yaml";
+            List<Rule> rules = _getRules.GetRulesList(resourceName);
+
+            foreach (Rule rule in rules)
+            {
+                var result = await _transactionService.AutoCategorizeTransactionNew(rule.catcode, rule.predicate);
+            }
+            return Ok(new MessageResponse("Transactions were auto categorized successfully!"));
         }
         catch (Exception e)
         {

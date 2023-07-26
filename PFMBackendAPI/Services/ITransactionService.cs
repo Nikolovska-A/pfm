@@ -28,6 +28,8 @@ namespace PFMBackendAPI.Services
 
         Task<List<Transaction>> GetAllTransactions();
 
+        Task<bool> AutoCategorizeTransactionNew(string catcode, string predicate);
+
     }
 }
 

@@ -22,6 +22,7 @@
     <PackageReference Include="CsvHelper" Version="30.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="YamlDotNet" Version="13.1.1" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.3.3" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,6 +36,7 @@
     <None Remove="Helpers\" />
     <None Remove="Models\Responses\" />
     <None Remove="resources\rules.yaml" />
+    <None Remove="resources\rules %28copy%29.yaml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
@@ -49,5 +51,11 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="resources\rules.yaml" />
+    <EmbeddedResource Include="resources\rules-new.yaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="Tests\PostmanTests\TestPFMBackendAPI.postman_collection.json" />
+    <Content Remove="Tests\PostmanTests\PFMBackendAPIEnvironment.postman_environment.json" />
+    <Content Remove="newman_results.json" />
   </ItemGroup>
 </Project>

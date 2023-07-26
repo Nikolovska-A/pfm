@@ -6,6 +6,9 @@ using PFMBackendAPI.Models;
 using PFMBackendAPI.Models.Responses;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
+using YamlDotNet.Core.Tokens;
+using System.Linq.Dynamic.Core;
+
 namespace PFMBackendAPI.Database.Repositories
 {
     public class TransactionRepository : ITransactionRepository
@@ -145,7 +148,6 @@ namespace PFMBackendAPI.Database.Repositories
         }
 
 
-
         public async Task<List<GroupAnalyticsDto>> GetSpendingAnalytics(string catCode, DateTime? startDate, DateTime? endDate, char direction)
         {
             var query = _dbContext.Transactions.AsQueryable();
@@ -206,13 +208,30 @@ namespace PFMBackendAPI.Database.Repositories
 
         }
 
+
         public async Task<List<TransactionEntity>> GetAllTransactions()
         {
             return await _dbContext.Transactions.ToListAsync();
+        }
+
+
+        public async Task<bool> AutoCategorizeTransactionNew(string catcode, string predicate)
+        {
+            List<TransactionEntity> transactions = await _dbContext.Transactions.ToListAsync();
+            var filteredData = transactions.AsQueryable().Where(predicate).ToList();
+
+            foreach (TransactionEntity transaction in filteredData)
+            {
+                if (transaction.CatCode == null)
+                {
+                    transaction.CatCode = catcode;
+                }
+            }
+            _dbContext.SaveChanges();
+            return true;
         }
 
     }
 
 
 }
-
