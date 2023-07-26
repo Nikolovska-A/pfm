@@ -70,6 +70,5 @@ string CreateConnectionString(IConfiguration configuration)
     };
 
     return connBuilder.ConnectionString;
-    //return "Host=docker.for.mac.host.internal;Port=5432;Username=postgres;Database=finance;Password=admin;Pooling=True";
 }
 

@@ -1,0 +1,27 @@
+﻿- title: When beneficiary name contains "chevron" or "shell" categorize transaction as 4 (Auto & Transport / Gas & Fuel)
+  catcode: 4
+  predicate: 'BeneficiaryName.ToLower().Contains("chevron") || BeneficiaryName.ToLower().Contains("shell")'
+- title: When mcc is 5811 (Caterers) categorize transaction as 39 (Food & Dining / Restaurants)
+  catcode: 39
+  predicate: 'Mcc = 5811'
+- title: When description contains "supermaket" categorize transaction as 38 (Groceries)
+  catcode: 38
+  predicate: 'Description.ToLower().Contains("supermaket")'
+- title: When description contains "doctor" or "health" categorize transaction as 45 (Doctor)
+  catcode: 45
+  predicate: 'Description.ToLower().Contains("doctor") || Description.ToLower().Contains("health")'
+- title: When beneficiary name contains "telecom" or "mobile" or description contains "bill" or "utilities" categorize transaction as C (Bills & Utilities)
+  catcode: C
+  predicate: 'BeneficiaryName.ToLower().Contains("telecom") || BeneficiaryName.ToLower().Contains("mobile") || Description.ToLower().Contains("bill") || Description.ToLower().Contains("utilities")'
+- title: When description contains "fee" categorize transaction as F (Fees & Charges)
+  catcode: F
+  predicate: 'Description.ToLower().Contains("fee")'
+- title: When beneficiary name contains "home" categorize transaction as J (Home)
+  catcode: J
+  predicate: 'BeneficiaryName.ToLower().Contains("home")'
+- title: When beneficiary name contains "pet" categorize transaction as O (Pets / Pet Food & Supplies / Pet Grooming)
+  catcode: O
+  predicate: 'BeneficiaryName.ToLower().Contains("pet")'
+- title: When beneficiary name contains "asseco" categorize transaction as K (Income / Paycheck / Bonus)
+  catcode: K
+  predicate: 'BeneficiaryName.ToLower().Contains("asseco")'

@@ -81,6 +81,12 @@ namespace PFMBackendAPI.Services
             var result = await _transactionRepository.GetAllTransactions();
             return _mapper.Map<List<Transaction>>(result);
         }
+
+        public async Task<bool> AutoCategorizeTransactionNew(string catcode, string predicate)
+        {
+            var result = await _transactionRepository.AutoCategorizeTransactionNew(catcode, predicate);
+            return result;
+        }
     }
 
     
