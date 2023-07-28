@@ -16,6 +16,8 @@ using System.Numerics;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Net.NetworkInformation;
+using PFMBackendAPI.Models.dto;
 
 namespace PFMBackendAPI.Controllers;
 
@@ -50,8 +52,9 @@ public class TransactionController : ControllerBase
         List<Transaction> transactions = new List<Transaction>();
         List<Transaction> updateTransactions = new List<Transaction>();
         List<TransactionCsvLine> csvTransactions = new List<TransactionCsvLine>();
-        List<ErrorResponseDto> errorList = new List<ErrorResponseDto>();
-        ErrorResponse errors = new ErrorResponse();
+        List<ErrorResponseDtoWithRow> errorList = new List<ErrorResponseDtoWithRow>();
+        ErrorResponseNew errors = new ErrorResponseNew();
+        int row = 1;
 
         try
         {
@@ -75,21 +78,7 @@ public class TransactionController : ControllerBase
 
                     if (!_transactionService.TransactionExists(tempTransaction))
                     {
-
-                        if (tempTransaction.Amount == 0)
-                        {
-                            errorList.Add(new ErrorResponseDto("amount", "required", "Mandatory field or parameter was not supplied."));
-                        }
-
-                        if (tempTransaction.Direction.Equals('\0'))
-                        {
-                            errorList.Add(new ErrorResponseDto("direction", "required", "Mandatory field or parameter was not supplied."));
-                        }
-
-                        if (!(tempTransaction.Direction.Equals('c') || tempTransaction.Direction.Equals('d')))
-                        {
-                            errorList.Add(new ErrorResponseDto("direction", "invalid-format", "Value supplied does not have expected format."));
-                        }
+                        errorList.AddRange(_transactionService.GetValidations(tempTransaction, row));
 
                         transactions.Add(tempTransaction);
                     }
@@ -97,9 +86,12 @@ public class TransactionController : ControllerBase
                     {
                         if (!transactionsMap[tempTransaction.TransactionId].Equals(tempTransaction))
                         {
+                            errorList = _transactionService.GetValidations(tempTransaction, row);
+
                             updateTransactions.Add(tempTransaction);
                         }
                     }
+                    row++;
                 }
             }
 
@@ -109,8 +101,15 @@ public class TransactionController : ControllerBase
                 var transactionsImported = transactions.Count;
                 var transactionsUpdated = updateTransactions.Count;
 
-                return Ok(new MessageResponse(String.Format("Success! Transactions imported: {0}  and transactions updated: {1}.", transactionsImported, transactionsUpdated)));
+                return Ok(new ImportFileMessageResponse("Transactions updated/imported successfully!", transactionsUpdated, transactionsImported));
+
             }
+            else if (errorList.Count >= 100)
+            {
+                BulkErrorResponse error = new BulkErrorResponse(errors.statusCode = BadRequest().StatusCode.ToString());
+                return BadRequest(error);
+            }
+
             else
             {
                 errors.statusCode = BadRequest().StatusCode.ToString();
@@ -207,6 +206,11 @@ public class TransactionController : ControllerBase
                         if (!_categoryService.CategoryExistById(split.catcode))
                         {
                             errorsList.Add(new ErrorResponseDto("catcode", "invalid-input", string.Format("The provided category code: '{0}' does not exist!", split.catcode)));
+                        }
+
+                        if (split.amount <= 0.0)
+                        {
+                            errorsList.Add(new ErrorResponseDto("amount", "invalid-input", "The amount cannot be less than 0.0"));
                         }
 
                         splits.Add(new Split(split, transaction.TransactionId));

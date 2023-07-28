@@ -5,6 +5,7 @@ using CsvHelper.Configuration;
 using Microsoft.AspNetCore.Mvc;
 using PFMBackendAPI.Helpers;
 using PFMBackendAPI.Models;
+using PFMBackendAPI.Models.dto;
 using PFMBackendAPI.Models.Responses;
 using PFMBackendAPI.Services;
 
@@ -41,7 +42,8 @@ namespace PFMBackendAPI.Controllers
             List<Category> categories = new List<Category>();
             List<Category> updateCategories = new List<Category>();
             List<CategoryCsvLine> csvCategories = new List<CategoryCsvLine>();
-            List<ErrorResponseDto> errors = new List<ErrorResponseDto>();
+            List<ErrorResponseDtoWithRow> errors = new List<ErrorResponseDtoWithRow>();
+            int row = 1;
 
             try
             {
@@ -67,21 +69,27 @@ namespace PFMBackendAPI.Controllers
                             {
                                 categories.Add(tempCategory);
                             }
-
                             else
                             {
-                                errors.Add(new ErrorResponseDto("parentCode, name", "Duplicate entries", string.Format("This combination of parent code: '{0}' and name: '{1}' already exists for another entry. " +
-                                    "Please provide a different parent code and name or update the existing entry accordingly.", tempCategory.ParentCode, tempCategory.Name)));
+                                errors.Add(new ErrorResponseDtoWithRow("parentCode, name", "Duplicate entries", string.Format("This combination of parent code: '{0}' and name: '{1}' already exists for another entry. " +
+                                    "Please provide a different parent code and name or update the existing entry accordingly.", tempCategory.ParentCode, tempCategory.Name), row));
                             }
-                        }
 
+                            if (string.IsNullOrEmpty(tempCategory.CodeId) && string.IsNullOrEmpty(tempCategory.ParentCode))
+                            {
+                                errors.Add(new ErrorResponseDtoWithRow("codeId, parentCode", "empty", "The codeId and parentCode for the entry are both empty. Please provide at least one of the codes.", row));
+                            }
+
+                        }
                         else
                         {
                             if (!categoriesMap[tempCategory.CodeId].Equals(tempCategory))
-                            {
+                            { 
                                 updateCategories.Add(tempCategory);
                             }
+
                         }
+                        row++;
                     }
 
                 }

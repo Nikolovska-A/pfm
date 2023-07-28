@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using PFMBackendAPI.Database.Entities;
 using PFMBackendAPI.Database.Repositories;
 using PFMBackendAPI.Models;
+using PFMBackendAPI.Models.dto;
+using PFMBackendAPI.Models.Responses;
+using YamlDotNet.Core.Tokens;
 
 namespace PFMBackendAPI.Services
 {
@@ -50,7 +53,7 @@ namespace PFMBackendAPI.Services
             return entity;
         }
 
-        public async Task<PagedSortedList<Category>> GetCategories(string parentCode, int page = 1, int pageSize = 10, string sortBy = null, SortOrder sortOrder = SortOrder.Asc)
+        public async Task<PagedSortedList<Category>> GetCategories(string parentCode, int page = 1, int pageSize = 10, string sortBy = null, SortOrder sortOrder = SortOrder.asc)
         {
             var result = await _categoryRepository.GetCategories(parentCode, page, pageSize, sortBy, sortOrder);
 
@@ -62,6 +65,7 @@ namespace PFMBackendAPI.Services
             var result = await _categoryRepository.GetAllCategories();
             return _mapper.Map<List<Category>>(result);
         }
+
     }
 }
 

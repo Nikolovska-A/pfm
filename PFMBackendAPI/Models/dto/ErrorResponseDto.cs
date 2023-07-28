@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace PFMBackendAPI.Models.Responses
 {
@@ -22,6 +23,6 @@ namespace PFMBackendAPI.Models.Responses
 			this.Message = message;
 		}
 
-	}
+    }
 }
 

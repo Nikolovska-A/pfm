@@ -15,11 +15,15 @@ namespace PFMBackendAPI.Helpers
             {
                 Status = StatusCodes.Status400BadRequest,
             };
+            List<IDictionary<string, string[]>> listErrors = new List<IDictionary<string, string[]>>();
+
+            listErrors.Add(problemDetails.Errors);
+
             var errorResponseDetails = new ErrorResponseDetails
             {
                 statusCode = problemDetails.Status,
                 message = problemDetails.Title,
-                errors = problemDetails.Errors,
+                errors = listErrors
             };
 
             var result = new BadRequestObjectResult(errorResponseDetails);

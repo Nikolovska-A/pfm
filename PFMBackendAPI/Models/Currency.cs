@@ -2,6 +2,7 @@
 {
     public enum Currency
     {
+        EMPTY,
         USD,
         EUR,
         RSD,

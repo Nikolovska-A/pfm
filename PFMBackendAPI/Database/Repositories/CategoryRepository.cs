@@ -49,27 +49,30 @@ namespace PFMBackendAPI.Database.Repositories
         }
 
 
-        public async Task<PagedSortedList<CategoryEntity>> GetCategories(string parentCode, int page = 1, int pageSize = 10, string sortBy = null, SortOrder sortOrder = SortOrder.Asc)
+        public async Task<PagedSortedList<CategoryEntity>> GetCategories(string parentCode, int page = 1, int pageSize = 10, string sortBy = null, SortOrder sortOrder = SortOrder.asc)
         {
-            var query = _dbContext.Categories.AsQueryable();
+            pageSize = Math.Abs(pageSize);
+            page = Math.Abs(page);
 
+            var query = _dbContext.Categories.AsQueryable();
 
             if (!string.IsNullOrEmpty(sortBy))
             {
                 switch (sortBy)
                 {
                     case "parentCode":
-                        query = sortOrder == SortOrder.Asc ? query.OrderBy(x => x.ParentCode) : query.OrderByDescending(x => x.ParentCode);
+                        query = sortOrder == SortOrder.asc ? query.OrderBy(x => x.ParentCode) : query.OrderByDescending(x => x.ParentCode);
                         break;
                     default:
                     case "name":
-                        query = sortOrder == SortOrder.Asc ? query.OrderBy(x => x.Name) : query.OrderByDescending(x => x.Name);
+                        query = sortOrder == SortOrder.asc ? query.OrderBy(x => x.Name) : query.OrderByDescending(x => x.Name);
                         break;
                 }
             }
             else
             {
                 query = query.OrderBy(p => p.Name);
+                sortBy = "name";
             }
 
             if (!String.IsNullOrEmpty(parentCode))
@@ -92,7 +95,7 @@ namespace PFMBackendAPI.Database.Repositories
                 TotalPages = totalPages,
                 Items = items,
                 SortBy = sortBy,
-                SortOrder = sortOrder
+                SortOrder = sortOrder.ToString()
             };
         }
 

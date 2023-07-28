@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PFMBackendAPI.Database.Entities;
 using PFMBackendAPI.Models;
+using PFMBackendAPI.Models.dto;
 using PFMBackendAPI.Models.Responses;
 
 namespace PFMBackendAPI.Services
@@ -20,7 +21,7 @@ namespace PFMBackendAPI.Services
         Task<bool> UpdateTransaction(int transactionId, string catcode);
 
         Task<PagedSortedList<Transaction>> GetTransactions(string transactionKind, DateTime? startDate, DateTime? endDate, int page = 1,
-       int pageSize = 10, string sortBy = null, SortOrder sortOrder = SortOrder.Asc);
+       int pageSize = 10, string sortBy = null, SortOrder sortOrder = SortOrder.asc);
 
         Task<List<GroupAnalyticsDto>> GetSpendingAnalytics(string catCode, DateTime? startDate, DateTime? endDate, char direction);
 
@@ -29,6 +30,8 @@ namespace PFMBackendAPI.Services
         Task<List<Transaction>> GetAllTransactions();
 
         Task<bool> AutoCategorizeTransactionNew(string catcode, string predicate);
+
+        public List<ErrorResponseDtoWithRow> GetValidations(Transaction transaction, int row);
 
     }
 }

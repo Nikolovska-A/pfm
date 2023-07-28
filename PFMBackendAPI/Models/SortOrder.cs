@@ -3,8 +3,8 @@ namespace PFMBackendAPI.Models
 {
     public enum SortOrder
     {
-        Asc,
-        Desc
+        asc,
+        desc
     }
 }
 

@@ -42,6 +42,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
     using var scope = app.Services.GetService<IServiceScopeFactory>().CreateScope();
     scope.ServiceProvider.GetRequiredService<FinanceDbContext>().Database.Migrate();
+
+    app.UseCors(x => x
+          .AllowAnyOrigin()
+          .AllowAnyMethod()
+          .AllowAnyHeader());
+
+    app.UseHttpsRedirection();
 }
 
 app.UseAuthorization();

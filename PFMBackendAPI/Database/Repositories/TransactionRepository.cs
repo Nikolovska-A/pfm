@@ -64,13 +64,16 @@ namespace PFMBackendAPI.Database.Repositories
         }
 
 
-        public async Task<PagedSortedList<TransactionEntity>> GetTransactions(string transactionKind, DateTime? startDate, DateTime? endDate, int page = 1, int pageSize = 10, string sortBy = null, SortOrder sortOrder = SortOrder.Asc)
+        public async Task<PagedSortedList<TransactionEntity>> GetTransactions(string transactionKind, DateTime? startDate, DateTime? endDate, int page = 1, int pageSize = 10, string sortBy = null, SortOrder sortOrder = SortOrder.asc)
         {
-
+            pageSize = Math.Abs(pageSize);
+            page = Math.Abs(page);
+            
             if (pageSize > MaxPageSize)
             {
                 pageSize = MaxPageSize;
             }
+
             var query = _dbContext.Transactions.AsQueryable();
 
             if (!string.IsNullOrEmpty(sortBy))
@@ -78,38 +81,39 @@ namespace PFMBackendAPI.Database.Repositories
                 switch (sortBy)
                 {
                     case "transactionId":
-                        query = sortOrder == SortOrder.Asc ? query.OrderBy(x => x.TransactionId) : query.OrderByDescending(x => x.TransactionId);
+                        query = sortOrder == SortOrder.asc ? query.OrderBy(x => x.TransactionId) : query.OrderByDescending(x => x.TransactionId);
                         break;
-                    case "date":
-                        query = sortOrder == SortOrder.Asc ? query.OrderBy(x => x.Date) : query.OrderByDescending(x => x.Date);
+                    case "beneficiaryName":
+                        query = sortOrder == SortOrder.asc ? query.OrderBy(x => x.BeneficiaryName) : query.OrderByDescending(x => x.BeneficiaryName);
                         break;
                     case "direction":
-                        query = sortOrder == SortOrder.Asc ? query.OrderBy(x => x.Direction) : query.OrderByDescending(x => x.Direction);
+                        query = sortOrder == SortOrder.asc ? query.OrderBy(x => x.Direction) : query.OrderByDescending(x => x.Direction);
                         break;
                     case "amount":
-                        query = sortOrder == SortOrder.Asc ? query.OrderBy(x => x.Amount) : query.OrderByDescending(x => x.Amount);
+                        query = sortOrder == SortOrder.asc ? query.OrderBy(x => x.Amount) : query.OrderByDescending(x => x.Amount);
                         break;
                     case "description":
-                        query = sortOrder == SortOrder.Asc ? query.OrderBy(x => x.Description) : query.OrderByDescending(x => x.Description);
+                        query = sortOrder == SortOrder.asc ? query.OrderBy(x => x.Description) : query.OrderByDescending(x => x.Description);
                         break;
                     case "currency":
-                        query = sortOrder == SortOrder.Asc ? query.OrderBy(x => x.Currency) : query.OrderByDescending(x => x.Currency);
+                        query = sortOrder == SortOrder.asc ? query.OrderBy(x => x.Currency) : query.OrderByDescending(x => x.Currency);
                         break;
                     case "mcc":
-                        query = sortOrder == SortOrder.Asc ? query.OrderBy(x => x.Mcc) : query.OrderByDescending(x => x.Mcc);
+                        query = sortOrder == SortOrder.asc ? query.OrderBy(x => x.Mcc) : query.OrderByDescending(x => x.Mcc);
                         break;
                     case "kind":
-                        query = sortOrder == SortOrder.Asc ? query.OrderBy(x => x.Kind) : query.OrderByDescending(x => x.Kind);
+                        query = sortOrder == SortOrder.asc ? query.OrderBy(x => x.Kind) : query.OrderByDescending(x => x.Kind);
                         break;
                     default:
-                    case "beneficiaryName":
-                        query = sortOrder == SortOrder.Asc ? query.OrderBy(x => x.BeneficiaryName) : query.OrderByDescending(x => x.BeneficiaryName);
+                    case "date":
+                        query = sortOrder == SortOrder.desc ? query.OrderByDescending(x => x.Date) : query.OrderBy(x => x.Date);
                         break;
                 }
             }
             else
             {
-                query = query.OrderBy(p => p.BeneficiaryName);
+                query = query.OrderByDescending(p => p.Date);
+                sortBy = "date";
             }
 
 
@@ -143,7 +147,7 @@ namespace PFMBackendAPI.Database.Repositories
                 TotalPages = totalPages,
                 Items = items,
                 SortBy = sortBy,
-                SortOrder = sortOrder
+                SortOrder = sortOrder.ToString()
             };
         }
 

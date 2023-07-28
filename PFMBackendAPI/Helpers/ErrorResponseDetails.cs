@@ -6,7 +6,7 @@ namespace PFMBackendAPI.Helpers
 
         public int? statusCode { get; set; }
 		public string? message { get; set; }
-        public IDictionary<string, string[]> errors { get; set; }
+        public List<IDictionary<string, string[]>> errors { get; set; }
       
         public ErrorResponseDetails()
 		{
