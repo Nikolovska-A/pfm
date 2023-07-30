@@ -95,7 +95,7 @@ namespace PFMBackendAPI.Database.Repositories
                 TotalPages = totalPages,
                 Items = items,
                 SortBy = sortBy,
-                SortOrder = sortOrder.ToString()
+                SortOrder = sortOrder
             };
         }
 

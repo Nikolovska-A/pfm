@@ -1,5 +1,7 @@
 ﻿using System.Reflection;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Converters;
 using Npgsql;
 using PFMBackendAPI.Database;
 using PFMBackendAPI.Database.Repositories;
@@ -23,6 +25,14 @@ builder.Services.AddControllers().ConfigureApiBehaviorOptions(options =>
 {
     options.InvalidModelStateResponseFactory = ErrorResponseValidator.MakeValidationResponse;
 });
+builder.Services
+    .AddMvc()
+    // Or .AddControllers(...)
+    .AddJsonOptions(opts =>
+    {
+        var enumConverter = new JsonStringEnumConverter();
+        opts.JsonSerializerOptions.Converters.Add(enumConverter);
+    });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -32,6 +42,7 @@ builder.Services.AddDbContext<FinanceDbContext>(opt =>
 {
     opt.UseNpgsql(CreateConnectionString(builder.Configuration));
 });
+
 
 var app = builder.Build();
 
@@ -49,6 +60,8 @@ if (app.Environment.IsDevelopment())
           .AllowAnyHeader());
 
     app.UseHttpsRedirection();
+   
+
 }
 
 app.UseAuthorization();

@@ -79,7 +79,6 @@ namespace PFMBackendAPI.Controllers
                             {
                                 errors.Add(new ErrorResponseDtoWithRow("codeId, parentCode", "empty", "The codeId and parentCode for the entry are both empty. Please provide at least one of the codes.", row));
                             }
-
                         }
                         else
                         {
@@ -87,7 +86,6 @@ namespace PFMBackendAPI.Controllers
                             { 
                                 updateCategories.Add(tempCategory);
                             }
-
                         }
                         row++;
                     }
