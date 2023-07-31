@@ -80,6 +80,18 @@
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.5.0, )"
+            },
+            "System.Linq": {
+              "target": "Package",
+              "version": "[4.3.0, )"
+            },
+            "System.Linq.Dynamic.Core": {
+              "target": "Package",
+              "version": "[1.3.3, )"
+            },
+            "YamlDotNet": {
+              "target": "Package",
+              "version": "[13.1.1, )"
             }
           },
           "imports": [

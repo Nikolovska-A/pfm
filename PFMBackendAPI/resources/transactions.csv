@@ -1,5 +1,5 @@
 id,beneficiary-name,date,direction,amount,description,currency,mcc,kind
-66229487,Faculty of contemporary arts,1/1/2021,d,187.20,Tuition,USD,8299,pmt
+66229487,Faculty of contemporary arts Test,1/1/2021,d,187.20,Tuition Test,USD,8299,pmt
 15122088,Glovo,1/1/2021,d,44.30,Food delivery,USD,5811,pmt
 71233330,Glovo,1/1/2021,d,17.00,Food delivery,USD,5811,pmt
 24419286,Claire Stevens,1/1/2021,c,300.10,Monthly rent,USD,,dep
@@ -1302,3 +1302,5 @@ id,beneficiary-name,date,direction,amount,description,currency,mcc,kind
 52174379,City parkings,12/28/2021,d,1.20,Parking fee,USD,7523,pmt
 20249039,Gift shop,12/28/2021,d,108.90,Birthday gifts,USD,5947,pmt
 33401399,Adobe,12/28/2021,d,12.60,TV,USD,5045,pmt
+33401389,Test123Test,12/28/2021,d,50.60,TV,USD,5045,pmt
+33401388,Test12345,12/28/2021,d,150.60,TV,USD,5045,pmt

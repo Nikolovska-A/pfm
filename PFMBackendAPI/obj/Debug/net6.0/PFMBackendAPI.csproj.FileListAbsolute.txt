@@ -23,6 +23,8 @@
 /Users/aleksandranikolovska/Desktop/PFM-ASEE/pfm/PFMBackendAPI/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerGen.dll
 /Users/aleksandranikolovska/Desktop/PFM-ASEE/pfm/PFMBackendAPI/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerUI.dll
 /Users/aleksandranikolovska/Desktop/PFM-ASEE/pfm/PFMBackendAPI/bin/Debug/net6.0/System.Diagnostics.DiagnosticSource.dll
+/Users/aleksandranikolovska/Desktop/PFM-ASEE/pfm/PFMBackendAPI/bin/Debug/net6.0/System.Linq.Dynamic.Core.dll
+/Users/aleksandranikolovska/Desktop/PFM-ASEE/pfm/PFMBackendAPI/bin/Debug/net6.0/YamlDotNet.dll
 /Users/aleksandranikolovska/Desktop/PFM-ASEE/pfm/PFMBackendAPI/obj/Debug/net6.0/PFMBackendAPI.csproj.AssemblyReference.cache
 /Users/aleksandranikolovska/Desktop/PFM-ASEE/pfm/PFMBackendAPI/obj/Debug/net6.0/PFMBackendAPI.GeneratedMSBuildEditorConfig.editorconfig
 /Users/aleksandranikolovska/Desktop/PFM-ASEE/pfm/PFMBackendAPI/obj/Debug/net6.0/PFMBackendAPI.AssemblyInfoInputs.cache

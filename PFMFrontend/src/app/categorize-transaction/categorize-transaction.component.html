@@ -1,0 +1,24 @@
+<h2 mat-dialog-title>Select Category</h2>
+<div mat-dialog-content class="custom-dialog-content">
+  <!-- Dropdown list for categories -->
+  <mat-form-field>
+    <mat-label>Select Category</mat-label>
+    <mat-select [(value)]="selectedCategory" (selectionChange)="onCategoryChange(selectedCategory)">
+      <mat-option *ngFor="let category of categories" [value]="category.codeId">
+        {{ category.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field *ngIf="selectedCategory">
+    <mat-label>Select Subcategory</mat-label>
+    <mat-select [(value)]="selectedSubcategory">
+      <mat-option *ngFor="let subcategory of subcategories" [value]="subcategory.codeId">
+        {{ subcategory.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions class="custom-dialog-actions">
+  <button mat-button (click)="onCancelClick()">Cancel</button>
+  <button mat-button (click)="onSaveClick()">Apply</button>
+</div>

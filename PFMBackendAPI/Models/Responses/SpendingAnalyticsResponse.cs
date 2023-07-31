@@ -5,6 +5,11 @@ namespace PFMBackendAPI.Models.Responses
 	{
 		public List<GroupAnalyticsDto> groups { get; set; }
 
+		public SpendingAnalyticsResponse()
+		{
+
+		}
+
 		public SpendingAnalyticsResponse(List<GroupAnalyticsDto> groups)
 		{
 			this.groups = groups;

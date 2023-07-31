@@ -15,7 +15,6 @@ namespace PFMBackendAPI.Models
         public char Direction { get; set; }
         public double Amount { get; set; }
         public string Description { get; set; }
-        //[JsonConverter(typeof(StringEnumConverter))]
         public Currency Currency { get; set; }
         public int Mcc { get; set; }
         public string Kind { get; set; }

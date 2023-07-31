@@ -1,0 +1,22 @@
+.custom-dialog-content {
+  width: 400px;
+  margin: 0 auto;
+}
+
+.custom-dialog-content mat-form-field {
+  width: 100%;
+}
+
+.custom-dialog-actions {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.custom-dialog-actions button {
+  flex: 1;
+}
+
+
+
+

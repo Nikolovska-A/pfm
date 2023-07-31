@@ -129,6 +129,14 @@ namespace PFMBackendAPI.Services
             }
             return errorList;
         }
+
+
+        public async Task<List<StatisticsDto>> GetStatistics(DateTime date, char direction)
+        {
+            var result = await _transactionRepository.GetStatistics(date, direction);
+
+            return result;
+        }
     }
 
     

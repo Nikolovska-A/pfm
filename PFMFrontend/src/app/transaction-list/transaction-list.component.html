@@ -1,0 +1,59 @@
+<div class="filter-container">
+  <input type="text" [(ngModel)]="filterKind" class="filter-input" placeholder="Enter Kind" (keydown.enter)="onEnterKey($event)" />
+  <button
+    #buttonRef
+    mat-button
+    class="filter-button"
+    (click)="filterByKind()"
+    (tap)="filterByKind()"
+    [class.grey-button]="!filterKind"
+  [class.green-button]="filterKind"
+  >
+  Filter
+  </button>
+</div>
+
+<div class="transaction-list-container">
+  <mat-card *ngFor="let transaction of listTransactions.items; let i = index"
+            class="transaction-card"
+            [ngClass]="i % 2 === 0 ? 'even-card' : 'odd-card'">
+    <mat-card-header>
+      <mat-card-title class="transaction-title">
+        <span>Transaction ID:  {{ transaction.transactionId }}</span>
+        <div *ngIf="transaction.splits.length > 0" class="split-marker-container">
+          <mat-icon class="split-marker">call_split</mat-icon>
+        </div>
+      </mat-card-title>
+      <mat-card-subtitle class="beneficiary-name">Beneficiary Name:  {{ transaction.beneficiaryName }}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="transaction-content">
+      <span class="transaction-date">Date:  {{ transaction.date | date: 'yyyy-MM-dd' }}</span>
+      <mat-icon class="direction-icon" [ngClass]="{'credit': transaction.direction === 'c', 'debit': transaction.direction === 'd'}">
+        {{ transaction.direction === 'c' ? 'arrow_upward' : 'arrow_downward' }}
+      </mat-icon>
+      <span class="transaction-amount">{{ transaction.currency }}  {{ transaction.amount | currency }}</span>
+    </mat-card-content>
+    <mat-card-content class="transaction-content">
+      <span class="transaction-kind">Transaction Kind:  {{ transaction.kind }}</span>
+      <button
+        mat-button
+        (click)="onCategorizeClick(transaction)"
+        [class.grey-button]="!transaction.catCode"
+      [class.green-button]="transaction.catCode"
+      >
+      {{ getCategoryName(transaction.catCode) }}
+      </button>
+
+    </mat-card-content>
+  </mat-card>
+</div>
+<div class="paging-buttons">
+  <button mat-button
+          class="paging-button"
+          *ngFor="let page of totalPagesArray()"
+          (click)="onClickButton(page)"
+          [class.selected]="currentPage === page">
+    {{ page }}
+  </button>
+</div>
+
