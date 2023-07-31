@@ -20,6 +20,8 @@ namespace PFMBackendAPI.Controllers
         private readonly ICategoryService _categoryService;
         private readonly CsvFileReader _csvFileReader;
 
+        private const int CategoryCsvFileType = 2;
+
         public CategoryController(ICategoryService categoryService, ILogger<CategoryController> logger)
         {
             _categoryService = categoryService;
@@ -43,7 +45,7 @@ namespace PFMBackendAPI.Controllers
             List<Category> updateCategories = new List<Category>();
             List<CategoryCsvLine> csvCategories = new List<CategoryCsvLine>();
             List<ErrorResponseDtoWithRow> errors = new List<ErrorResponseDtoWithRow>();
-            int row = 1;
+            int row = 2;
 
             try
             {
@@ -55,7 +57,7 @@ namespace PFMBackendAPI.Controllers
                     categoriesMap.Add(c.CodeId, c);
                 }
 
-                if (!await _csvFileReader.GetCsvReader(formFile, 2)) { throw new Exception("Something went wrong!"); }
+                if (!await _csvFileReader.GetCsvReader(formFile, CategoryCsvFileType)) { throw new Exception("Something went wrong!"); }
                 csvCategories = _csvFileReader.categoryCsvLines;
 
                 foreach (CategoryCsvLine line in csvCategories)
@@ -98,7 +100,7 @@ namespace PFMBackendAPI.Controllers
                     var categoriesImported = categories.Count;
                     var categoriesUpdated = updateCategories.Count;
 
-                    return Ok(new MessageResponse(String.Format("Success! Categories imported: {0}  and categories updated: {1}.", categoriesImported, categoriesUpdated)));
+                    return Ok(new ImportFileMessageResponse("Categories updated/imported successfully!", categoriesUpdated, categoriesImported));
                 }
                 else
                 {

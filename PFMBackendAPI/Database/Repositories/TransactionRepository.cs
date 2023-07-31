@@ -16,7 +16,7 @@ namespace PFMBackendAPI.Database.Repositories
     {
         FinanceDbContext _dbContext;
 
-        public const int MaxPageSize = 100;
+        private const int MaxPageSize = 100;
 
         public TransactionRepository(FinanceDbContext dbContext)
         {

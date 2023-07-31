@@ -33,6 +33,11 @@ public class TransactionController : ControllerBase
     private readonly ISplitService _splitService;
     private readonly GetRules _getRules;
 
+    private const int TransactionCsvFileType = 1;
+    private const int ErrorLimitNumber = 100;
+
+
+
     public TransactionController(ITransactionService transactionService, ICategoryService categoryService, ISplitService splitService, ILogger<TransactionController> logger)
     {
         _transactionService = transactionService;
@@ -54,7 +59,7 @@ public class TransactionController : ControllerBase
         List<TransactionCsvLine> csvTransactions = new List<TransactionCsvLine>();
         List<ErrorResponseDtoWithRow> errorList = new List<ErrorResponseDtoWithRow>();
         ErrorResponseNew errors = new ErrorResponseNew();
-        int row = 1;
+        int row = 2;
 
         try
         {
@@ -66,7 +71,7 @@ public class TransactionController : ControllerBase
                 transactionsMap.Add(t.TransactionId, t);
             }
 
-            if (!await _csvFileReader.GetCsvReader(formFile, 1)) { throw new Exception("Something went wrong!"); }
+            if (!await _csvFileReader.GetCsvReader(formFile, TransactionCsvFileType)) { throw new Exception("Something went wrong!"); }
 
             csvTransactions = _csvFileReader.transactionCsvLines;
 
@@ -104,7 +109,7 @@ public class TransactionController : ControllerBase
                 return Ok(new ImportFileMessageResponse("Transactions updated/imported successfully!", transactionsUpdated, transactionsImported));
 
             }
-            else if (errorList.Count >= 100)
+            else if (errorList.Count >= ErrorLimitNumber)
             {
                 BulkErrorResponse error = new BulkErrorResponse(errors.statusCode = BadRequest().StatusCode.ToString());
                 return BadRequest(error);
