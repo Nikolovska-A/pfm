@@ -31,8 +31,9 @@ namespace PFMBackendAPI.Services
 
         Task<bool> AutoCategorizeTransactionNew(string catcode, string predicate);
 
-        public List<ErrorResponseDtoWithRow> GetValidations(Transaction transaction, int row);
+        List<ErrorResponseDtoWithRow> GetValidations(Transaction transaction, int row);
 
+        Task<List<StatisticsDto>> GetStatistics(DateTime date, char direction);
     }
 }
 

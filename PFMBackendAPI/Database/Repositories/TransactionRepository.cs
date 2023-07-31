@@ -8,6 +8,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 using YamlDotNet.Core.Tokens;
 using System.Linq.Dynamic.Core;
+using PFMBackendAPI.Models.dto;
 
 namespace PFMBackendAPI.Database.Repositories
 {
@@ -68,7 +69,7 @@ namespace PFMBackendAPI.Database.Repositories
         {
             pageSize = Math.Abs(pageSize);
             page = Math.Abs(page);
-            
+
             if (pageSize > MaxPageSize)
             {
                 pageSize = MaxPageSize;
@@ -103,6 +104,9 @@ namespace PFMBackendAPI.Database.Repositories
                         break;
                     case "kind":
                         query = sortOrder == SortOrder.asc ? query.OrderBy(x => x.Kind) : query.OrderByDescending(x => x.Kind);
+                        break;
+                    case "catcode":
+                        query = sortOrder == SortOrder.asc ? query.OrderBy(x => x.CatCode) : query.OrderByDescending(x => x.CatCode);
                         break;
                     default:
                     case "date":
@@ -233,6 +237,32 @@ namespace PFMBackendAPI.Database.Repositories
             }
             _dbContext.SaveChanges();
             return true;
+        }
+
+        public async Task<List<StatisticsDto>> GetStatistics(DateTime date, char direction)
+        {
+            var query = _dbContext.Transactions.AsQueryable();
+
+            query = query.Where(t => t.Date.Month == date.Month && t.Date.Year == date.Year && t.Direction == direction);
+            var tquery = query.Join(_dbContext.Categories,
+                        transaction => transaction.CatCode,
+                        category => category.Code,
+                (transaction, category) => new
+                {
+                    Amount = transaction.Amount,
+                    CatCode = transaction.CatCode,
+                    CategoryName = category.Name
+                }).GroupBy(f => f.CatCode).Select(g => new StatisticsDto
+                {
+                    catCode = g.Key,
+                    amount = g.Sum(s => s.Amount),
+                    categoryName = g.First().CategoryName
+                });
+
+            List<StatisticsDto> statistics = new List<StatisticsDto>();
+            statistics = await tquery.ToListAsync();
+
+            return statistics;
         }
 
     }

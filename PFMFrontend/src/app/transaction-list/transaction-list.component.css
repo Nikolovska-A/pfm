@@ -1,0 +1,158 @@
+.transaction-list-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.transaction-card {
+  position: relative;
+  width: 80%;
+  margin: 10px 0;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  background: linear-gradient(rgba(0, 128, 0, 0.8), rgba(0, 128, 0, 0.5));
+}
+
+.transaction-card .transaction-title,
+.transaction-card .transaction-subtitle,
+.transaction-card .transaction-content {
+  padding: 3px;
+}
+
+.even-card {
+  background: linear-gradient(rgba(0, 128, 0, 0.5), rgba(0, 128, 0, 0.2));
+}
+
+.odd-card {
+  background: linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.5));
+}
+
+.transaction-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  color: #333;
+}
+
+.transaction-amount {
+  font-size: 20px;
+  font-weight: bold;
+  padding-right: 10px;
+}
+
+.transaction-currency {
+  font-size: 10px;
+  font-weight: bold;
+  margin-left: 8px;
+}
+
+.paging-buttons {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+
+}
+
+.paging-button {
+  background-color: white;
+  color: green;
+  border: 2px solid green;
+  margin: 0 5px;
+  padding: 3px 6px;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.paging-button.selected {
+  background-color: green;
+  color: white;
+  border-color: green;
+}
+
+.paging-button.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.filter-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.filter-input {
+  font-size: 18px;
+  padding: 8px 16px;
+  margin-right: 10px;
+}
+
+.filter-button {
+  font-size: 18px;
+  padding: 8px 16px;
+}
+
+.credit {
+  color: green;
+}
+
+.debit {
+  color: red;
+}
+
+.transaction-title {
+  display: flex;
+  justify-content: space-between;
+}
+
+.split-marker-container {
+  display: flex;
+  align-items: center;
+}
+
+.split-marker {
+  font-size: 24px;
+  font-weight: bold;
+  margin-left: 800px;
+  color: blue;
+}
+
+.direction-icon {
+  font-size: 30px;
+  margin-right: 500px;
+}
+
+.transaction-category {
+  font-size: 18px;
+}
+
+.transaction-category,
+.transaction-date,
+.transaction-kind {
+  font-size: 18px;
+  margin-left: 15px;
+  margin-top: 10px;
+}
+
+.beneficiary-name{
+  font-size: 18px;
+  margin-left: 3px;
+}
+
+.grey-button {
+  background-color: grey;
+}
+
+.green-button {
+  background-color: green;
+}
+
+
+

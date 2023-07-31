@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PFMBackendAPI.Database.Entities;
 using PFMBackendAPI.Models;
+using PFMBackendAPI.Models.dto;
 using PFMBackendAPI.Models.Responses;
 
 namespace PFMBackendAPI.Database.Repositories
@@ -29,6 +30,8 @@ namespace PFMBackendAPI.Database.Repositories
         Task<List<TransactionEntity>> GetAllTransactions();
 
         Task<bool> AutoCategorizeTransactionNew(string catcode, string predicate);
+
+        Task<List<StatisticsDto>> GetStatistics(DateTime date, char direction);
 
     }
 }

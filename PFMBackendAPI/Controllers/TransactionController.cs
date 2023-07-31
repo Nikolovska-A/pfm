@@ -144,7 +144,7 @@ public class TransactionController : ControllerBase
 
     [Produces("application/json")]
     [Route("{id}/categorize")]
-    [HttpPost]
+    [HttpPatch]
     public async Task<IActionResult> CategorizeTransaction([FromRoute] int id, [FromBody] CategoryRequest categoryRequest)
     {
         try
@@ -301,6 +301,22 @@ public class TransactionController : ControllerBase
             return BadRequest(new MessageResponse(e.Message));
         }
 
+    }
+
+    [Produces("application/json")]
+    [Route("statistics")]
+    [HttpGet]
+    public async Task<IActionResult> GetStatistics([FromQuery] DateTime date, [FromQuery] char direction)
+    {
+
+        var result = await _transactionService.GetStatistics(date, direction);
+        StatisticsResponse response = new StatisticsResponse(result);
+
+        if (response.statistics.Count == 0)
+        {
+            return NotFound(new MessageResponse("No transactions were found!"));
+        }
+        return Ok(response);
     }
 
 
