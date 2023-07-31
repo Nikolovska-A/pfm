@@ -36,8 +36,6 @@ public class TransactionController : ControllerBase
     private const int TransactionCsvFileType = 1;
     private const int ErrorLimitNumber = 100;
 
-
-
     public TransactionController(ITransactionService transactionService, ICategoryService categoryService, ISplitService splitService, ILogger<TransactionController> logger)
     {
         _transactionService = transactionService;

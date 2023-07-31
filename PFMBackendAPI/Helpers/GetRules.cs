@@ -12,6 +12,11 @@ namespace PFMBackendAPI.Helpers
 		}
 
 
+        /// <summary>
+        /// Retrieves a list of Rule objects from a yaml file.
+        /// </summary>
+        /// <param name="resourceName">The name of the yaml file containing the rules.</param>
+        /// <returns>A List of Rule objects representing the rules defined in the file.</returns>
         public List<Rule> GetRulesList(string resourceName)
         {
 

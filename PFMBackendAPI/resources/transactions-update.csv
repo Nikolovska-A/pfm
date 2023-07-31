@@ -1,0 +1,6 @@
+id,beneficiary-name,date,direction,amount,description,currency,mcc,kind
+66229487,Faculty of science,1/1/2021,d,187.20,Tuition Test,USD,8299,pmt
+15122088,Glovo,1/1/2021,d,44.30,Food delivery Test,USD,5811,pmt
+71233330,Glovo,1/1/2021,d,170.00,Food delivery,USD,5811,pmt
+1000000,Test Entry,1/1/2021,d,50.00,Food delivery,USD,5811,pmt
+20000000,Test entry2,1/1/2021,d,40.00,Food delivery,USD,5811,pmt

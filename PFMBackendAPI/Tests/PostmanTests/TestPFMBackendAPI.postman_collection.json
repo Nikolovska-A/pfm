@@ -61,7 +61,7 @@
 										{
 											"key": "formFile",
 											"type": "file",
-											"src": "/Users/aleksandranikolovska/Desktop/PFM-ASEE/pfm/PFMBackendAPI/resources/categories.csv"
+											"src": "categories.csv"
 										}
 									]
 								},
@@ -93,7 +93,8 @@
 											"    \"properties\": {",
 											"        \"statusCode\": { \"type\": \"number\" },",
 											"        \"message\": { \"type\": \"string\" },",
-											"        \"errors\": {",
+											"        \"errors\": [",
+											"            {",
 											"            \"type\": \"object\",",
 											"            \"properties\": {",
 											"                \"formFile\": {",
@@ -105,6 +106,7 @@
 											"            },",
 											"            \"required\": [\"formFile\"]",
 											"        }",
+											"        ]",
 											"    },",
 											"    \"required\": [\"statusCode\", \"message\", \"errors\"]",
 											"};",
@@ -155,6 +157,106 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Import File Errors 400",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"const expectedSchema = {",
+											"    \"type\": \"object\",",
+											"    \"properties\": {",
+											"        \"statusCode\": {",
+											"            \"type\": \"string\"",
+											"        },",
+											"        \"message\": {",
+											"            \"type\": \"string\"",
+											"        },",
+											"        \"errors\": {",
+											"            \"type\": \"array\",",
+											"            \"items\": {",
+											"                \"type\": \"object\",",
+											"                \"properties\": {",
+											"                    \"row\": {",
+											"                        \"type\": \"integer\"",
+											"                    },",
+											"                    \"tag\": {",
+											"                        \"type\": \"string\"",
+											"                    },",
+											"                    \"error\": {",
+											"                        \"type\": \"string\"",
+											"                    },",
+											"                    \"message\": {",
+											"                        \"type\": \"string\"",
+											"                    }",
+											"                },",
+											"                \"required\": [",
+											"                    \"row\",",
+											"                    \"tag\",",
+											"                    \"error\",",
+											"                    \"message\"",
+											"                ]",
+											"            }",
+											"        }",
+											"    },",
+											"    \"required\": [",
+											"        \"statusCode\",",
+											"        \"message\",",
+											"        \"errors\"",
+											"    ]",
+											"};",
+											"",
+											"pm.test(\"Response has correct schema\", function () {",
+											"    const jsonData = pm.response.json();",
+											"    pm.expect(tv4.validate(jsonData, expectedSchema)).to.be.true;",
+											"});",
+											"",
+											"",
+											"pm.test(\"Response time is less than 500ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(3000);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "",
+										"value": "",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "formFile",
+											"type": "file",
+											"src": "categories-errors.csv"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{server}}{{categoriesUri}}/import",
+									"host": [
+										"{{server}}{{categoriesUri}}"
+									],
+									"path": [
+										"import"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -179,7 +281,7 @@
 											"        \"pageSize\": { \"type\": \"number\" },",
 											"        \"page\": { \"type\": \"number\" },",
 											"        \"totalPages\": { \"type\": \"number\" },",
-											"        \"sortOrder\": { \"type\": \"number\" },",
+											"        \"sortOrder\": { \"type\": \"string\" },",
 											"        \"sortBy\": { \"type\": \"string\" },",
 											"        \"items\": {",
 											"            \"type\": \"array\",",
@@ -310,7 +412,7 @@
 										{
 											"key": "formFile",
 											"type": "file",
-											"src": "/Users/aleksandranikolovska/Desktop/PFM-ASEE/pfm/PFMBackendAPI/resources/transactions.csv"
+											"src": "transactions.csv"
 										}
 									]
 								},
@@ -342,7 +444,8 @@
 											"    \"properties\": {",
 											"        \"statusCode\": { \"type\": \"number\" },",
 											"        \"message\": { \"type\": \"string\" },",
-											"        \"errors\": {",
+											"        \"errors\": [",
+											"            {",
 											"            \"type\": \"object\",",
 											"            \"properties\": {",
 											"                \"formFile\": {",
@@ -354,6 +457,7 @@
 											"            },",
 											"            \"required\": [\"formFile\"]",
 											"        }",
+											"        ]",
 											"    },",
 											"    \"required\": [\"statusCode\", \"message\", \"errors\"]",
 											"};",
@@ -390,6 +494,106 @@
 											"type": "file",
 											"src": "/Users/aleksandranikolovska/Desktop/PFM-ASEE/pfm/PFMBackendAPI/resources/transactions.csv",
 											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{server}}{{transactionsUri}}/import",
+									"host": [
+										"{{server}}{{transactionsUri}}"
+									],
+									"path": [
+										"import"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Import File Errors 400",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"const expectedSchema = {",
+											"    \"type\": \"object\",",
+											"    \"properties\": {",
+											"        \"statusCode\": {",
+											"            \"type\": \"string\"",
+											"        },",
+											"        \"message\": {",
+											"            \"type\": \"string\"",
+											"        },",
+											"        \"errors\": {",
+											"            \"type\": \"array\",",
+											"            \"items\": {",
+											"                \"type\": \"object\",",
+											"                \"properties\": {",
+											"                    \"row\": {",
+											"                        \"type\": \"integer\"",
+											"                    },",
+											"                    \"tag\": {",
+											"                        \"type\": \"string\"",
+											"                    },",
+											"                    \"error\": {",
+											"                        \"type\": \"string\"",
+											"                    },",
+											"                    \"message\": {",
+											"                        \"type\": \"string\"",
+											"                    }",
+											"                },",
+											"                \"required\": [",
+											"                    \"row\",",
+											"                    \"tag\",",
+											"                    \"error\",",
+											"                    \"message\"",
+											"                ]",
+											"            }",
+											"        }",
+											"    },",
+											"    \"required\": [",
+											"        \"statusCode\",",
+											"        \"message\",",
+											"        \"errors\"",
+											"    ]",
+											"};",
+											"",
+											"pm.test(\"Response has correct schema\", function () {",
+											"    const jsonData = pm.response.json();",
+											"    pm.expect(tv4.validate(jsonData, expectedSchema)).to.be.true;",
+											"});",
+											"",
+											"",
+											"pm.test(\"Response time is less than 500ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(3000);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "",
+										"value": "",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "formFile",
+											"type": "file",
+											"src": "transactions-errors.csv"
 										}
 									]
 								},
@@ -444,7 +648,7 @@
 								}
 							],
 							"request": {
-								"method": "POST",
+								"method": "PATCH",
 								"header": [
 									{
 										"key": "",
@@ -510,7 +714,7 @@
 								}
 							],
 							"request": {
-								"method": "POST",
+								"method": "PATCH",
 								"header": [
 									{
 										"key": "",
@@ -560,48 +764,116 @@
 											"const expectedSchema = {",
 											"    \"type\": \"object\",",
 											"    \"properties\": {",
-											"        \"totalCount\": { \"type\": \"number\" },",
-											"        \"pageSize\": { \"type\": \"number\" },",
-											"        \"page\": { \"type\": \"number\" },",
-											"        \"totalPages\": { \"type\": \"number\" },",
-											"        \"sortOrder\": { \"type\": \"number\" },",
-											"        \"sortBy\": { \"type\": \"string\" },",
+											"        \"totalCount\": {",
+											"            \"type\": \"integer\"",
+											"        },",
+											"        \"pageSize\": {",
+											"            \"type\": \"integer\"",
+											"        },",
+											"        \"page\": {",
+											"            \"type\": \"integer\"",
+											"        },",
+											"        \"totalPages\": {",
+											"            \"type\": \"integer\"",
+											"        },",
+											"        \"sortOrder\": {",
+											"            \"type\": \"string\"",
+											"        },",
+											"        \"sortBy\": {",
+											"            \"type\": \"string\"",
+											"        },",
 											"        \"items\": {",
 											"            \"type\": \"array\",",
 											"            \"items\": {",
 											"                \"type\": \"object\",",
 											"                \"properties\": {",
-											"                    \"transactionId\": { \"type\": \"number\" },",
-											"                    \"beneficiaryName\": { \"type\": \"string\" },",
-											"                    \"date\": { \"type\": \"string\", \"format\": \"date-time\" },",
-											"                    \"direction\": { \"type\": \"string\" },",
-											"                    \"amount\": { \"type\": \"number\" },",
-											"                    \"description\": { \"type\": \"string\" },",
-											"                    \"currency\": { \"type\": \"number\" },",
-											"                    \"mcc\": { \"type\": \"number\" },",
-											"                    \"kind\": { \"type\": \"string\" },",
-											"                    \"catCode\": { \"type\": [\"string\", \"null\"] },",
+											"                    \"transactionId\": {",
+											"                        \"type\": \"integer\"",
+											"                    },",
+											"                    \"beneficiaryName\": {",
+											"                        \"type\": \"string\"",
+											"                    },",
+											"                    \"date\": {",
+											"                        \"type\": \"string\",",
+											"                        \"format\": \"date-time\"",
+											"                    },",
+											"                    \"direction\": {",
+											"                        \"type\": \"string\"",
+											"                    },",
+											"                    \"amount\": {",
+											"                        \"type\": \"number\"",
+											"                    },",
+											"                    \"description\": {",
+											"                        \"type\": \"string\"",
+											"                    },",
+											"                    \"currency\": {",
+											"                        \"type\": \"string\"",
+											"                    },",
+											"                    \"mcc\": {",
+											"                        \"type\": \"integer\"",
+											"                    },",
+											"                    \"kind\": {",
+											"                        \"type\": \"string\"",
+											"                    },",
+											"                    \"catCode\": {",
+											"                        \"type\": [\"null\", \"string\"]",
+											"                    },",
 											"                    \"splits\": {",
 											"                        \"type\": \"array\",",
 											"                        \"items\": {",
 											"                            \"type\": \"object\",",
 											"                            \"properties\": {",
-											"                                \"splitId\": { \"type\": \"number\" },",
-											"                                \"description\": { \"type\": \"string\" },",
-											"                                \"catCode\": { \"type\": [\"string\", \"null\"] },",
-											"                                \"amount\": { \"type\": \"number\" },",
-											"                                \"transactionId\": { \"type\": \"number\" }",
+											"                                \"splitId\": {",
+											"                                    \"type\": \"integer\"",
+											"                                },",
+											"                                \"description\": {",
+											"                                    \"type\": \"string\"",
+											"                                },",
+											"                                \"catCode\": {",
+											"                                    \"type\": [\"null\", \"string\"]",
+											"                                },",
+											"                                \"amount\": {",
+											"                                    \"type\": \"number\"",
+											"                                },",
+											"                                \"transactionId\": {",
+											"                                    \"type\": \"integer\"",
+											"                                }",
 											"                            },",
-											"                            \"required\": [\"splitId\", \"description\", \"catCode\", \"amount\", \"transactionId\"]",
+											"                            \"required\": [",
+											"                                \"splitId\",",
+											"                                \"description\",",
+											"                                \"amount\",",
+											"                                \"transactionId\"",
+											"                            ]",
 											"                        }",
 											"                    }",
 											"                },",
-											"                \"required\": [\"transactionId\", \"beneficiaryName\", \"date\", \"direction\", \"amount\", \"description\", \"currency\", \"mcc\", \"kind\", \"catCode\", \"splits\"]",
+											"                \"required\": [",
+											"                    \"transactionId\",",
+											"                    \"beneficiaryName\",",
+											"                    \"date\",",
+											"                    \"direction\",",
+											"                    \"amount\",",
+											"                    \"description\",",
+											"                    \"currency\",",
+											"                    \"mcc\",",
+											"                    \"kind\",",
+											"                    \"splits\"",
+											"                ]",
 											"            }",
 											"        }",
 											"    },",
-											"    \"required\": [\"totalCount\", \"pageSize\", \"page\", \"totalPages\", \"sortOrder\", \"sortBy\", \"items\"]",
-											"};",
+											"    \"required\": [",
+											"        \"totalCount\",",
+											"        \"pageSize\",",
+											"        \"page\",",
+											"        \"totalPages\",",
+											"        \"sortOrder\",",
+											"        \"sortBy\",",
+											"        \"items\"",
+											"    ]",
+											"}",
+											"",
 											"",
 											"pm.test(\"Response has correct schema\", function () {",
 											"    const jsonData = pm.response.json();",
@@ -627,40 +899,42 @@
 									"formdata": []
 								},
 								"url": {
-									"raw": "{{server}}{{transactionsUri}}?transactionKind=wdw,pmt&sortBy=transactionId&sortOrder=asc&page=1&pageSize=10",
+									"raw": "{{server}}{{transactionsUri}}?transactionKind=pmt&startDate=2021-08-16&endDate=2021-08-17",
 									"host": [
 										"{{server}}{{transactionsUri}}"
 									],
 									"query": [
 										{
 											"key": "transactionKind",
-											"value": "wdw,pmt"
+											"value": "pmt"
 										},
 										{
 											"key": "startDate",
-											"value": "2021-11-20",
-											"disabled": true
+											"value": "2021-08-16"
 										},
 										{
 											"key": "endDate",
-											"value": "2021-11-21",
-											"disabled": true
+											"value": "2021-08-17"
 										},
 										{
 											"key": "sortBy",
-											"value": "transactionId"
+											"value": "transactionId",
+											"disabled": true
 										},
 										{
 											"key": "sortOrder",
-											"value": "asc"
+											"value": "asc",
+											"disabled": true
 										},
 										{
 											"key": "page",
-											"value": "1"
+											"value": "1",
+											"disabled": true
 										},
 										{
 											"key": "pageSize",
-											"value": "10"
+											"value": "10",
+											"disabled": true
 										}
 									]
 								}
@@ -1096,14 +1370,14 @@
 									"formdata": []
 								},
 								"url": {
-									"raw": "{{server}}{{spendingAnalyticsUri}}?catcode=J&startDate=2021-11-20",
+									"raw": "{{server}}{{spendingAnalyticsUri}}?catcode=C,4&startDate=2021-11-20",
 									"host": [
 										"{{server}}{{spendingAnalyticsUri}}"
 									],
 									"query": [
 										{
 											"key": "catcode",
-											"value": "J"
+											"value": "C,4"
 										},
 										{
 											"key": "startDate",

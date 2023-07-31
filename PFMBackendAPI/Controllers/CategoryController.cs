@@ -21,6 +21,7 @@ namespace PFMBackendAPI.Controllers
         private readonly CsvFileReader _csvFileReader;
 
         private const int CategoryCsvFileType = 2;
+        private const int ErrorLimitNumber = 100;
 
         public CategoryController(ICategoryService categoryService, ILogger<CategoryController> logger)
         {
@@ -44,7 +45,8 @@ namespace PFMBackendAPI.Controllers
             List<Category> categories = new List<Category>();
             List<Category> updateCategories = new List<Category>();
             List<CategoryCsvLine> csvCategories = new List<CategoryCsvLine>();
-            List<ErrorResponseDtoWithRow> errors = new List<ErrorResponseDtoWithRow>();
+            List<ErrorResponseDtoWithRow> errorList = new List<ErrorResponseDtoWithRow>();
+            ErrorResponseNew errors = new ErrorResponseNew();
             int row = 2;
 
             try
@@ -73,13 +75,13 @@ namespace PFMBackendAPI.Controllers
                             }
                             else
                             {
-                                errors.Add(new ErrorResponseDtoWithRow("parentCode, name", "Duplicate entries", string.Format("This combination of parent code: '{0}' and name: '{1}' already exists for another entry. " +
+                                errorList.Add(new ErrorResponseDtoWithRow("parentCode, name", "Duplicate entries", string.Format("This combination of parent code: '{0}' and name: '{1}' already exists for another entry. " +
                                     "Please provide a different parent code and name or update the existing entry accordingly.", tempCategory.ParentCode, tempCategory.Name), row));
                             }
 
                             if (string.IsNullOrEmpty(tempCategory.CodeId) && string.IsNullOrEmpty(tempCategory.ParentCode))
                             {
-                                errors.Add(new ErrorResponseDtoWithRow("codeId, parentCode", "empty", "The codeId and parentCode for the entry are both empty. Please provide at least one of the codes.", row));
+                                errorList.Add(new ErrorResponseDtoWithRow("codeId, parentCode", "empty", "The codeId and parentCode for the entry are both empty. Please provide at least one of the codes.", row));
                             }
                         }
                         else
@@ -94,7 +96,7 @@ namespace PFMBackendAPI.Controllers
 
                 }
 
-                if (errors.Count == 0)
+                if (errorList.Count == 0)
                 {
                     var result = await _categoryService.ImportCategories(categories, updateCategories);
                     var categoriesImported = categories.Count;
@@ -102,8 +104,15 @@ namespace PFMBackendAPI.Controllers
 
                     return Ok(new ImportFileMessageResponse("Categories updated/imported successfully!", categoriesUpdated, categoriesImported));
                 }
+                else if (errorList.Count >= ErrorLimitNumber)
+                {
+                    BulkErrorResponse error = new BulkErrorResponse(errors.statusCode = BadRequest().StatusCode.ToString());
+                    return BadRequest(error);
+                }
                 else
                 {
+                    errors.statusCode = BadRequest().StatusCode.ToString();
+                    errors.errors = errorList;
                     return BadRequest(errors);
                 }
 
