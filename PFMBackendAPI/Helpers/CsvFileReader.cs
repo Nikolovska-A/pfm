@@ -12,6 +12,9 @@ namespace PFMBackendAPI.Helpers
         public List<TransactionCsvLine> transactionCsvLines { get; set; }
         public List<CategoryCsvLine> categoryCsvLines { get; set; }
 
+        private const int TransactionCsvFileType = 1;
+        private const int CategoryCsvFileType = 2;
+
         public CsvFileReader()
         {
             transactionCsvLines = new List<TransactionCsvLine>();
@@ -55,12 +58,12 @@ namespace PFMBackendAPI.Helpers
                             };
 
                             var csv = new CsvReader(reader, config);
-                            if (type == 1)
+                            if (type == TransactionCsvFileType)
                             {
                                 transactionCsvLines = csv.GetRecords<TransactionCsvLine>().ToList();
                                 return true;
                             }
-                            else if (type == 2)
+                            else if (type == CategoryCsvFileType)
                             {
                                 categoryCsvLines = csv.GetRecords<CategoryCsvLine>().ToList();
                                 return true;

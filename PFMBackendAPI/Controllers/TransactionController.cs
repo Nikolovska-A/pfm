@@ -69,7 +69,7 @@ public class TransactionController : ControllerBase
                 transactionsMap.Add(t.TransactionId, t);
             }
 
-            if (!await _csvFileReader.GetCsvReader(formFile, TransactionCsvFileType)) { throw new Exception("Something went wrong!"); }
+            if (!await _csvFileReader.GetCsvReader(formFile, TransactionCsvFileType)) { throw new Exception("File format not supported!"); }
 
             csvTransactions = _csvFileReader.transactionCsvLines;
 
@@ -122,7 +122,7 @@ public class TransactionController : ControllerBase
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return BadRequest(new MessageResponse(ex.Message));
 
         }
     }

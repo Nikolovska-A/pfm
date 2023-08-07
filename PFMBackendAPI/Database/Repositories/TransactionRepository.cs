@@ -118,6 +118,7 @@ namespace PFMBackendAPI.Database.Repositories
             {
                 query = query.OrderByDescending(p => p.Date);
                 sortBy = "date";
+                sortOrder = SortOrder.desc;
             }
 
 

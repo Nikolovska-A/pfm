@@ -9,6 +9,12 @@ namespace PFMBackendAPI.Helpers
         {
         }
 
+
+        /// <summary>
+        /// Creates a validation response containing error details/>.
+        /// </summary>
+        /// <param name="context">The action context containing errors.</param>
+        /// <returns>An IActionResult representing the validation problem response.</returns>
         public static IActionResult MakeValidationResponse(ActionContext context)
         {
             var problemDetails = new ValidationProblemDetails(context.ModelState)
